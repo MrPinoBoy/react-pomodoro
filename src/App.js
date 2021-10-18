@@ -1,7 +1,6 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import Timer from "./components/Timer";
 import Controls from "./components/Controls";
-import React from "react";
 
 const App = () => {
     const [seconds, setSeconds] = useState(5);
