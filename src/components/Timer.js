@@ -1,3 +1,5 @@
+import React from "react";
+
 const Timer = props => {
     let minutes = "00";
     if (props.seconds > 59) {

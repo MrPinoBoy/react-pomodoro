@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 
 const Controls = props => {
     if (props.seconds > 1 && props.start === true) {
