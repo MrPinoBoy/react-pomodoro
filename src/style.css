@@ -1,0 +1,123 @@
+@keyframes eclipse-1 {
+    0% {
+        transform: scaleX(100%);
+    }
+    100% {
+        transform: scaleX(00%);
+    }
+}
+
+@keyframes eclipse-2 {
+    0% {
+        transform: scaleX(0%);
+    }
+    100% {
+        transform: scaleX(-100%);
+    }
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+        "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h2 {
+    text-align: center;
+}
+
+.lune-2 {
+    position: absolute;
+    width: 100px;
+    height: 200px;
+    background-color: darkgrey;
+    border-radius: 5000px 0px 0px 5000px;
+    /* transition: transform 2s; */
+    transform: scaleX(0%);
+    transform-origin: right;
+    top: 0;
+}
+
+.lune {
+    position: relative;
+    width: 100px;
+    height: 200px;
+    background-color: darkgrey;
+    border-radius: 5000px 0px 0px 5000px;
+    transform-origin: right;
+}
+
+.soleil {
+    position: absolute;
+    width: 100px;
+    height: 200px;
+    background-color: orange;
+    border-radius: 5000px 0px 0px 5000px;
+    transform-origin: right;
+    top: 0;
+    /* transition: transform 2s; */
+}
+
+.soleil-2 {
+    position: absolute;
+    width: 100px;
+    height: 200px;
+    background-color: orange;
+    border-radius: 5000px 0px 0px 5000px;
+    transform-origin: right;
+    transform: rotateY(180deg);
+    top: 0;
+    z-index: -1;
+}
+
+#app {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: auto;
+}
+
+.div {
+    position: relative;
+}
+
+.nuage {
+    width: 150px;
+    height: 75px;
+    position: absolute;
+    top: 35%;
+    left: -25%;
+}
+
+.nuage * {
+    background: lightblue;
+}
+
+.nuage-bas {
+    width: 100%;
+    height: 40px;
+    border-radius: 5000px;
+    position: absolute;
+    bottom: 0;
+}
+
+.nuage-haut {
+    width: 50px;
+    height: 60px;
+    border-radius: 5000px;
+    position: absolute;
+    top: 10px;
+    left: 15%;
+}
+
+.nuage-haut2 {
+    width: 100px;
+    height: 50px;
+    border-radius: 5000px 5000px 000px 000px;
+    position: absolute;
+    top: 0px;
+    right: 10%;
+}
