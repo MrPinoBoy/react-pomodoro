@@ -12,9 +12,9 @@ My second react project is a configurable timer. You can add or remove 10 second
 
 ## Languages used 
 
-- HTML
-- CSS
-- JavaScript React
+- <img src="https://cdn-icons-png.flaticon.com/512/732/732212.png" alt="drawing" style="width:1rem; height:1rem;"/> HTML 
+- <img src="https://cdn4.iconfinder.com/data/icons/social-media-logos-6/512/121-css3-512.png" alt="drawing" style="width:1rem; height:1rem;"/> CSS
+- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/React.svg/1200px-React.svg.png" alt="drawing" style="width:1rem; height:1rem;"/> JavaScript React
 
 ## Development
 
