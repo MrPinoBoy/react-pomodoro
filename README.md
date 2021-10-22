@@ -10,6 +10,12 @@ App link: [Click here](https://gifted-almeida-98e7ae.netlify.app/)
 
 My second react project is a configurable timer. You can add or remove 10 seconds by pressing the *+* or *-* buttons. You can also start or pause the timer, and reset it to the same time as your last timer.
 
+## Languages used 
+
+- HTML
+- CSS
+- JavaScript React
+
 ## Development
 
 Since this is my second react project, it's probably filled with flaws. It was bundled using [parcel](https://parceljs.org/). I didn't struggle too much coding it, but it is far more optimisable. I'll keep working on it, refactoring most of the animation controls. I may also need to rethink the way the different play states are handled, to facilitate my work. The styling is yet to be finished, but I'd like to really push it to the limits.
