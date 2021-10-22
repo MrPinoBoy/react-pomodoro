@@ -4,7 +4,7 @@
 ---
 App link: [Click here](https://gifted-almeida-98e7ae.netlify.app/)
 
-![App Screenshot](/image/pomodoro.png)
+![App Screenshot](/image/pomodoro.PNG)
 
 ## Introduction
 
