@@ -20,6 +20,15 @@ UseRefs are a bit obscure to me still, that's why there's a lot of querySelector
 
 Timing and resetting the animations was and is still complicated, it's far from perfect and maybe I'll find a solution later on that will make it all very simple.
 
+## To-do list
+
+- Replace querySelectors by useRefs
+- Refactor animation related functions
+- Rethink the +, - and reset buttons functionalities
+- Finish modal screen functionnalities 
+- Style the buttons and the modal screen
+- Pretty up the code
+
 ## Conclusion
 
 Even though it is not finished, I'm pretty proud of this project. The react app is working really well, it is just the styling that still has bugs and problems, since it is a bit complicated. 
