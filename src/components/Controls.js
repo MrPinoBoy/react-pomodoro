@@ -125,9 +125,9 @@ const Controls = props => {
                         document.querySelector(
                             "#soleil",
                         ).style.animationPlayState = "running";
-                        // document.querySelector(
-                        //     "#lune",
-                        // ).style.animationPlayState = "running";
+                        document.querySelector(
+                            "#lune",
+                        ).style.animationPlayState = "running";
                         document.querySelector(
                             "body",
                         ).style.animationPlayState = "running";
@@ -152,9 +152,9 @@ const Controls = props => {
                         document.querySelector(
                             "#soleil",
                         ).style.animationPlayState = "paused";
-                        // document.querySelector(
-                        //     "#lune",
-                        // ).style.animationPlayState = "paused";
+                        document.querySelector(
+                            "#lune",
+                        ).style.animationPlayState = "paused";
                         document.querySelector(
                             "body",
                         ).style.animationPlayState = "paused";

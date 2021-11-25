@@ -29676,10 +29676,8 @@ var Controls = function Controls(props) {
         document.querySelector(".cratere-4").style.animation = "cratere 0.5s ".concat(props.seconds - 0.5, "s forwards");
       } else if (props.start === "pause") {
         props.setStart("play");
-        document.querySelector("#soleil").style.animationPlayState = "running"; // document.querySelector(
-        //     "#lune",
-        // ).style.animationPlayState = "running";
-
+        document.querySelector("#soleil").style.animationPlayState = "running";
+        document.querySelector("#lune").style.animationPlayState = "running";
         document.querySelector("body").style.animationPlayState = "running";
         document.querySelector(".cratere").style.animationPlayState = "running";
         document.querySelector(".cratere-2").style.animationPlayState = "running";
@@ -29687,10 +29685,8 @@ var Controls = function Controls(props) {
         document.querySelector(".cratere-4").style.animationPlayState = "running";
       } else {
         props.setStart("pause");
-        document.querySelector("#soleil").style.animationPlayState = "paused"; // document.querySelector(
-        //     "#lune",
-        // ).style.animationPlayState = "paused";
-
+        document.querySelector("#soleil").style.animationPlayState = "paused";
+        document.querySelector("#lune").style.animationPlayState = "paused";
         document.querySelector("body").style.animationPlayState = "paused";
         document.querySelector(".cratere").style.animationPlayState = "paused";
         document.querySelector(".cratere-2").style.animationPlayState = "paused";
@@ -30013,7 +30009,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59815" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49893" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
