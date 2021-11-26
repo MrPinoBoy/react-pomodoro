@@ -12,56 +12,40 @@ const Controls = props => {
             props.setStart("stop")
         });
     }
-    const resetAnim = () => {
-        document.querySelector(".lune").style.zIndex = "1";
-        document.querySelector(".lune").style.animation = "moon-gone 2s 1s";
-        document.querySelector(".lune-2").style.transform = "scaleX(-100%)";
-        document.querySelector(".lune-2").style.animation = "moon2-gone 2s 1s";
-        document.querySelector("#soleil").style.animation = "none"
-        setTimeout(()=> {
-            document.querySelector(".lune").style.zIndex = "0";
-            document.querySelector(".lune-2").style.transform = "scaleX(0%)";
-            document.querySelector(".lune").style.animation = "none";
-        }, 3000);
-        document.querySelector(
-            "body",
-        ).style.backgroundPosition = "right";
-        document.querySelector(
-            "body",
-        ).style.animation = `bgcolor2 3s 1s forwards`;
-        document.querySelector(
-            ".cratere"
-        ).style.transform =
-        `scale(100%) rotate(289deg)`;
-        document.querySelector(
-            ".cratere-2"
-        ).style.transform =
-        `scale(100%) rotate(289deg)`;
-        document.querySelector(
-            ".cratere-3"
-        ).style.transform =
-        `scale(100%) rotate(289deg)`;
-        document.querySelector(
-            ".cratere-4"
-        ).style.transform =
-        `scale(100%) rotate(289deg)`;
-        document.querySelector(
-            ".cratere"
-        ).style.animation = 
-        `cratere-reverse 0.5s 0.5s forwards`;
-        document.querySelector(
-            ".cratere-2"
-        ).style.animation = 
-        `cratere-reverse 0.5s 0.25s forwards`;
-        document.querySelector(
-            ".cratere-3"
-        ).style.animation = 
-        `cratere-reverse 0.5s forwards`;
-        document.querySelector(
-            ".cratere-4"
-        ).style.animation = 
-        `cratere-reverse 0.5s 0.25s forwards`;
-    };
+
+    const resetSunEclipse = () => {
+        let id = null;
+        //on va rechercher la valeur actuelle du transform : scaleX de nos éléments
+        //c'est stocké dans une matrice on va juste la chercher au bon endroit
+        //!!! marche seulement avec nav webkit
+        let sunStyle = window.getComputedStyle(document.querySelector("#soleil"))
+        let sunMatrix = new WebKitCSSMatrix(sunStyle.transform);
+        let moonStyle = window.getComputedStyle(document.querySelector("#lune"))
+        let moonMatrix = new WebKitCSSMatrix(moonStyle.transform)
+        let sunWidth = 99 * sunMatrix.m11;
+        let moonWidth = -99 * moonMatrix.m11;
+        console.log(moonWidth)
+        document.querySelector("#lune").style.transform = "scaleX(-" + moonWidth + "%)";
+        document.querySelector("#soleil").style.transform = "scaleX(" + sunWidth + "%)";
+        document.querySelector("#lune").style.removeProperty("animation");
+        document.querySelector("#soleil").style.removeProperty("animation");
+        id = setInterval(frame, 10);
+        function frame(){
+            if(moonWidth <= 0) {
+                moonWidth = 0;
+                sunWidth = sunWidth + 1
+                document.querySelector("#lune").style.transform = "scaleX(-" + moonWidth + "%)";
+                document.querySelector("#soleil").style.transform = "scaleX(" + sunWidth + "%)";
+            } else {
+                moonWidth = moonWidth - 1;
+                document.querySelector("#lune").style.transform = "scaleX(-" + moonWidth + "%)";
+            }
+            if (sunWidth >= 100){
+                document.querySelector("#soleil").style.transform = "scaleX(" + sunWidth + "%)";
+                clearInterval(id);
+            }
+        }
+    }
     return (
         <>
             <button
@@ -207,7 +191,7 @@ const Controls = props => {
                 type={"button"}
                 onClick={() => {
                     props.setStart("stop");
-                    resetAnim();
+                    resetSunEclipse();
                     setTimeout(() => props.setSeconds(props.initialTime), 100);
                 }}>
                 {"Reset"}

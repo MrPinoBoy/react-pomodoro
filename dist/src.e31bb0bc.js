@@ -29630,27 +29630,40 @@ var Controls = function Controls(props) {
     });
   }
 
-  var resetAnim = function resetAnim() {
-    document.querySelector(".lune").style.zIndex = "1";
-    document.querySelector(".lune").style.animation = "moon-gone 2s 1s";
-    document.querySelector(".lune-2").style.transform = "scaleX(-100%)";
-    document.querySelector(".lune-2").style.animation = "moon2-gone 2s 1s";
-    document.querySelector("#soleil").style.animation = "none";
-    setTimeout(function () {
-      document.querySelector(".lune").style.zIndex = "0";
-      document.querySelector(".lune-2").style.transform = "scaleX(0%)";
-      document.querySelector(".lune").style.animation = "none";
-    }, 3000);
-    document.querySelector("body").style.backgroundPosition = "right";
-    document.querySelector("body").style.animation = "bgcolor2 3s 1s forwards";
-    document.querySelector(".cratere").style.transform = "scale(100%) rotate(289deg)";
-    document.querySelector(".cratere-2").style.transform = "scale(100%) rotate(289deg)";
-    document.querySelector(".cratere-3").style.transform = "scale(100%) rotate(289deg)";
-    document.querySelector(".cratere-4").style.transform = "scale(100%) rotate(289deg)";
-    document.querySelector(".cratere").style.animation = "cratere-reverse 0.5s 0.5s forwards";
-    document.querySelector(".cratere-2").style.animation = "cratere-reverse 0.5s 0.25s forwards";
-    document.querySelector(".cratere-3").style.animation = "cratere-reverse 0.5s forwards";
-    document.querySelector(".cratere-4").style.animation = "cratere-reverse 0.5s 0.25s forwards";
+  var resetSunEclipse = function resetSunEclipse() {
+    var id = null; //on va rechercher la valeur actuelle du transform : scaleX de nos éléments
+    //c'est stocké dans une matrice on va juste la chercher au bon endroit
+    //!!! marche seulement avec nav webkit
+
+    var sunStyle = window.getComputedStyle(document.querySelector("#soleil"));
+    var sunMatrix = new WebKitCSSMatrix(sunStyle.transform);
+    var moonStyle = window.getComputedStyle(document.querySelector("#lune"));
+    var moonMatrix = new WebKitCSSMatrix(moonStyle.transform);
+    var sunWidth = 99 * sunMatrix.m11;
+    var moonWidth = -99 * moonMatrix.m11;
+    console.log(moonWidth);
+    document.querySelector("#lune").style.transform = "scaleX(-" + moonWidth + "%)";
+    document.querySelector("#soleil").style.transform = "scaleX(" + sunWidth + "%)";
+    document.querySelector("#lune").style.removeProperty("animation");
+    document.querySelector("#soleil").style.removeProperty("animation");
+    id = setInterval(frame, 10);
+
+    function frame() {
+      if (moonWidth <= 0) {
+        moonWidth = 0;
+        sunWidth = sunWidth + 1;
+        document.querySelector("#lune").style.transform = "scaleX(-" + moonWidth + "%)";
+        document.querySelector("#soleil").style.transform = "scaleX(" + sunWidth + "%)";
+      } else {
+        moonWidth = moonWidth - 1;
+        document.querySelector("#lune").style.transform = "scaleX(-" + moonWidth + "%)";
+      }
+
+      if (sunWidth >= 100) {
+        document.querySelector("#soleil").style.transform = "scaleX(" + sunWidth + "%)";
+        clearInterval(id);
+      }
+    }
   };
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("button", {
@@ -29723,7 +29736,7 @@ var Controls = function Controls(props) {
     type: "button",
     onClick: function onClick() {
       props.setStart("stop");
-      resetAnim();
+      resetSunEclipse();
       setTimeout(function () {
         return props.setSeconds(props.initialTime);
       }, 100);
@@ -30009,7 +30022,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49893" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58429" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
