@@ -29574,12 +29574,27 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var Timer = function Timer(props) {
   var minutes = "00";
+
+  if (props.seconds > 0.2 && props.start === "play") {
+    (0, _react.useEffect)(function () {
+      return setTimeout(function () {
+        props.setSeconds(props.seconds - 0.1);
+      }, 100);
+    });
+  } else if (props.seconds < 0.2 && props.start === "play") {
+    (0, _react.useEffect)(function () {
+      props.setSeconds(0);
+      props.setStart("stop");
+    });
+  }
 
   if (props.seconds > 59) {
     if (props.seconds < 600) {
@@ -29614,99 +29629,140 @@ function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "functio
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 var Controls = function Controls(props) {
-  if (props.seconds > 0.2 && props.start === "play") {
-    (0, _react.useEffect)(function () {
-      return setTimeout(function () {
-        return props.setSeconds(props.seconds - 0.1);
-      }, 100);
-    });
+  var _useState = (0, _react.useState)(0),
+      _useState2 = _slicedToArray(_useState, 2),
+      moon = _useState2[0],
+      setMoon = _useState2[1];
+
+  var _useState3 = (0, _react.useState)(100),
+      _useState4 = _slicedToArray(_useState3, 2),
+      sun = _useState4[0],
+      setSun = _useState4[1];
+
+  var soleil = document.querySelector("#soleil");
+  var lune = document.querySelector("#lune");
+  var sunWidth = sun;
+  var moonWidth = moon;
+
+  var id = function id() {
+    return setInterval(frame, 10);
+  };
+
+  var test;
+
+  function frame() {
+    if (sunWidth <= 0) {
+      moonWidth = moonWidth + 2 / props.seconds;
+      document.querySelector("#lune").style.transform = "scaleX(-" + moonWidth + "%)";
+    } else {
+      sunWidth = sunWidth - 2 / props.seconds;
+      document.querySelector("#soleil").style.transform = "scaleX(" + sunWidth + "%)";
+    }
+
+    if (moonWidth >= 100 || props.start == "pause") {
+      clearInterval(test);
+    }
   }
 
-  if (props.seconds < 0.2 && props.start === "play") {
-    (0, _react.useEffect)(function () {
-      props.setSeconds(0);
-      props.setStart("stop");
-    });
-  }
+  (0, _react.useEffect)(function () {
+    console.log(props.start);
 
-  var resetAnim = function resetAnim() {
-    document.querySelector(".lune").style.zIndex = "1";
-    document.querySelector(".lune").style.animation = "moon-gone 2s 1s";
-    document.querySelector(".lune-2").style.transform = "scaleX(-100%)";
-    document.querySelector(".lune-2").style.animation = "moon2-gone 2s 1s";
-    document.querySelector("#soleil").style.animation = "none";
-    setTimeout(function () {
-      document.querySelector(".lune").style.zIndex = "0";
-      document.querySelector(".lune-2").style.transform = "scaleX(0%)";
-      document.querySelector(".lune").style.animation = "none";
-    }, 3000);
-    document.querySelector("body").style.backgroundPosition = "right";
-    document.querySelector("body").style.animation = "bgcolor2 3s 1s forwards";
-    document.querySelector(".cratere").style.transform = "scale(100%) rotate(289deg)";
-    document.querySelector(".cratere-2").style.transform = "scale(100%) rotate(289deg)";
-    document.querySelector(".cratere-3").style.transform = "scale(100%) rotate(289deg)";
-    document.querySelector(".cratere-4").style.transform = "scale(100%) rotate(289deg)";
-    document.querySelector(".cratere").style.animation = "cratere-reverse 0.5s 0.5s forwards";
-    document.querySelector(".cratere-2").style.animation = "cratere-reverse 0.5s 0.25s forwards";
-    document.querySelector(".cratere-3").style.animation = "cratere-reverse 0.5s forwards";
-    document.querySelector(".cratere-4").style.animation = "cratere-reverse 0.5s 0.25s forwards";
+    if (props.start === "play") {
+      test = id();
+    } else {
+      clearInterval(test);
+    }
+  }, [props.start]); // const sunEclipse = () => {
+  //     let id = null;
+  //     let sunWidth = sun;
+  //     let moonWidth = moon;
+  //     id = setInterval(frame, 10);
+  //     function frame(){
+  //         if(sunWidth <= 0) {
+  //             moonWidth = moonWidth + 2/props.seconds;
+  //             document.querySelector("#lune").style.transform = "scaleX(-" + moonWidth + "%)";
+  //         } else {
+  //             sunWidth = sunWidth - 2/props.seconds
+  //             document.querySelector("#soleil").style.transform = "scaleX(" + sunWidth + "%)";
+  //         }
+  //         if (moonWidth >= 100 || props.start == "pause" ){
+  //             clearInterval(id);
+  //         }
+  //     }
+  //     if(props.start == "pause") {
+  //         clearInterval(id)
+  //     }
+  // }
+
+  var resetSunEclipse = function resetSunEclipse() {
+    var id = null; //on va rechercher la valeur actuelle du transform : scaleX de nos éléments
+    //c'est stocké dans une matrice on va juste la chercher au bon endroit
+    //!!! marche seulement avec nav webkit
+
+    var sunStyle = window.getComputedStyle(document.querySelector("#soleil"));
+    var sunMatrix = new WebKitCSSMatrix(sunStyle.transform);
+    var moonStyle = window.getComputedStyle(document.querySelector("#lune"));
+    var moonMatrix = new WebKitCSSMatrix(moonStyle.transform);
+    var sunWidth = 99 * sunMatrix.m11;
+    var moonWidth = -99 * moonMatrix.m11;
+    console.log(moonWidth);
+    id = setInterval(frame, 10);
+
+    function frame() {
+      if (moonWidth <= 0) {
+        sunWidth = sunWidth + 1;
+        document.querySelector("#soleil").style.transform = "scaleX(" + sunWidth + "%)";
+      } else {
+        moonWidth = moonWidth - 1;
+        document.querySelector("#lune").style.transform = "scaleX(-" + moonWidth + "%)";
+      }
+
+      if (sunWidth >= 99) {
+        sunWidth = 99;
+        clearInterval(id);
+      }
+    }
   };
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("button", {
     id: "trigger",
     type: "button",
     onClick: function onClick() {
-      console.log(props.seconds);
-
       if (props.start === "stop" && props.seconds > 1) {
         props.setInitialTime(props.seconds);
-        console.log(props.initialTime);
-        props.setStart("play");
-        document.querySelector("#soleil").style.animation = "eclipse-1 ".concat((props.seconds - 1) / 2, "s ease-in forwards");
-        document.querySelector("#lune").style.animation = "eclipse-2 ".concat((props.seconds - 1) / 2, "s ").concat((props.seconds - 1) / 2, "s ease-out forwards");
-        document.querySelector("body").style.animation = "bgcolor ".concat(props.seconds, "s forwards");
-        document.querySelector(".cratere").style.transform = "scale(0%) rotate(289deg)";
-        document.querySelector(".cratere-2").style.transform = "scale(0%) rotate(289deg)";
-        document.querySelector(".cratere-3").style.transform = "scale(0%) rotate(289deg)";
-        document.querySelector(".cratere-4").style.transform = "scale(0%) rotate(289deg)";
-        document.querySelector(".cratere").style.animation = "cratere 0.5s ".concat(props.seconds - 1, "s forwards");
-        document.querySelector(".cratere-2").style.animation = "cratere 0.5s ".concat(props.seconds - 0.75, "s forwards");
-        document.querySelector(".cratere-3").style.animation = "cratere 0.5s ".concat(props.seconds - 0.75, "s forwards");
-        document.querySelector(".cratere-4").style.animation = "cratere 0.5s ".concat(props.seconds - 0.5, "s forwards");
+        props.setStart("play"); // sunEclipse();
       } else if (props.start === "pause") {
         props.setStart("play");
-        document.querySelector("#soleil").style.animationPlayState = "running";
-        document.querySelector("#lune").style.animationPlayState = "running";
-        document.querySelector("body").style.animationPlayState = "running";
-        document.querySelector(".cratere").style.animationPlayState = "running";
-        document.querySelector(".cratere-2").style.animationPlayState = "running";
-        document.querySelector(".cratere-3").style.animationPlayState = "running";
-        document.querySelector(".cratere-4").style.animationPlayState = "running";
+        clearInterval(test);
       } else {
         props.setStart("pause");
-        document.querySelector("#soleil").style.animationPlayState = "paused";
-        document.querySelector("#lune").style.animationPlayState = "paused";
-        document.querySelector("body").style.animationPlayState = "paused";
-        document.querySelector(".cratere").style.animationPlayState = "paused";
-        document.querySelector(".cratere-2").style.animationPlayState = "paused";
-        document.querySelector(".cratere-3").style.animationPlayState = "paused";
-        document.querySelector(".cratere-4").style.animationPlayState = "paused";
       }
     }
   }, "Start/Pause"), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: function onClick() {
-      resetAnim();
+      // resetAnim();
       props.setStart("stop");
       setTimeout(function () {
-        return props.setSeconds(props.seconds + 10);
+        props.setSeconds(props.seconds + 10);
       }, 100);
     }
   }, "+"), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: function onClick() {
-      resetAnim();
       props.setStart("stop");
 
       if (props.seconds > 30) {
@@ -29722,8 +29778,8 @@ var Controls = function Controls(props) {
   }, "-"), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: function onClick() {
-      props.setStart("stop");
-      resetAnim();
+      props.setStart("stop"); // resetSunEclipse();
+
       setTimeout(function () {
         return props.setSeconds(props.initialTime);
       }, 100);
@@ -29950,7 +30006,9 @@ var App = function App() {
     className: "nuage-haut2"
   })), /*#__PURE__*/_react.default.createElement(_Timer.default, {
     seconds: seconds,
-    setSeconds: setSeconds
+    setSeconds: setSeconds,
+    start: start,
+    setStart: setStart
   }), /*#__PURE__*/_react.default.createElement(_Controls.default, {
     seconds: seconds,
     setSeconds: setSeconds,
@@ -30009,7 +30067,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49893" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58429" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

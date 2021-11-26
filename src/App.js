@@ -28,7 +28,11 @@ const App = () => {
                 <div className={"nuage-haut"} />
                 <div className={"nuage-haut2"} />
             </div>
-            <Timer seconds={seconds} setSeconds={setSeconds} />
+            <Timer 
+                seconds={seconds} 
+                setSeconds={setSeconds} 
+                start={start}
+                setStart={setStart} />
             <Controls
                 seconds={seconds}
                 setSeconds={setSeconds}
