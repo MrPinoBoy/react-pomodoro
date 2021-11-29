@@ -1,4 +1,5 @@
 import React,{useRef} from "react";
+import {ResetCraters, ResetSunEclipse} from "./Controls";
 const Modal = (props) => {
     const element = useRef(0);
     const cool = useRef();
@@ -19,7 +20,9 @@ const Modal = (props) => {
         inputEl.style.display = "none"
         props.setStart("stop")
         props.setSeconds(props.initialTime)
-        setTimeout(() => props.setStart("play"), 1000)
+        ResetCraters();
+        setTimeout(() => ResetSunEclipse(),1000);
+        setTimeout(() => props.setStart("play"), 4000);
     }
     
     return (

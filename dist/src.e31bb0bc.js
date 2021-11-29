@@ -29606,13 +29606,64 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.ResetSunEclipse = exports.ResetCraters = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+var ResetCraters = function ResetCraters() {
+  document.querySelector(".cratere").style.transform = "scale(100%) rotate(289deg)";
+  document.querySelector(".cratere-2").style.transform = "scale(100%) rotate(289deg)";
+  document.querySelector(".cratere-3").style.transform = "scale(100%) rotate(289deg)";
+  document.querySelector(".cratere-4").style.transform = "scale(100%) rotate(289deg)";
+  document.querySelector(".cratere").style.animation = "cratere-reverse 0.5s 0.5s forwards";
+  document.querySelector(".cratere-2").style.animation = "cratere-reverse 0.5s 0.25s forwards";
+  document.querySelector(".cratere-3").style.animation = "cratere-reverse 0.5s forwards";
+  document.querySelector(".cratere-4").style.animation = "cratere-reverse 0.5s 0.25s forwards";
+};
+
+exports.ResetCraters = ResetCraters;
+
+var ResetSunEclipse = function ResetSunEclipse() {
+  var id = null; //on va rechercher la valeur actuelle du transform : scaleX de nos éléments
+  //c'est stocké dans une matrice on va juste la chercher au bon endroit
+  //!!! marche seulement avec nav webkit
+
+  var sunStyle = window.getComputedStyle(document.querySelector("#soleil"));
+  var sunMatrix = new WebKitCSSMatrix(sunStyle.transform);
+  var moonStyle = window.getComputedStyle(document.querySelector("#lune"));
+  var moonMatrix = new WebKitCSSMatrix(moonStyle.transform);
+  var sunWidth = 99 * sunMatrix.m11;
+  var moonWidth = -99 * moonMatrix.m11;
+  document.querySelector("#lune").style.transform = "scaleX(-" + moonWidth + "%)";
+  document.querySelector("#soleil").style.transform = "scaleX(" + sunWidth + "%)";
+  document.querySelector("#lune").style.removeProperty("transition");
+  document.querySelector("#soleil").style.removeProperty("transition");
+  id = setInterval(frame, 10);
+
+  function frame() {
+    if (moonWidth <= 0) {
+      moonWidth = 0;
+      sunWidth = sunWidth + 1;
+      document.querySelector("#lune").style.transform = "scaleX(-" + moonWidth + "%)";
+      document.querySelector("#soleil").style.transform = "scaleX(" + sunWidth + "%)";
+    } else {
+      moonWidth = moonWidth - 1;
+      document.querySelector("#lune").style.transform = "scaleX(-" + moonWidth + "%)";
+    }
+
+    if (sunWidth >= 99) {
+      sunWidth = 100;
+      document.querySelector("#soleil").style.transform = "scaleX(" + sunWidth + "%)";
+      clearInterval(id);
+    }
+  }
+};
+
+exports.ResetSunEclipse = ResetSunEclipse;
 
 var Controls = function Controls(props) {
   if (props.seconds > 0.2 && props.start === "play") {
@@ -29621,6 +29672,10 @@ var Controls = function Controls(props) {
         return props.setSeconds(props.seconds - 0.1);
       }, 100);
     });
+    document.querySelector("#soleil").style.transition = "".concat((props.seconds - 1) / 2, "s ease-in transform");
+    document.querySelector("#soleil").style.transform = "scaleX(0%)";
+    document.querySelector("#lune").style.transition = "".concat((props.seconds - 1) / 2, "s ").concat((props.seconds - 1) / 2, "s ease-out transform");
+    document.querySelector("#lune").style.transform = "scaleX(-100%)";
   }
 
   if (props.seconds < 0.2 && props.start === "play") {
@@ -29630,87 +29685,124 @@ var Controls = function Controls(props) {
     });
   }
 
-  var resetSunEclipse = function resetSunEclipse() {
-    var id = null; //on va rechercher la valeur actuelle du transform : scaleX de nos éléments
-    //c'est stocké dans une matrice on va juste la chercher au bon endroit
-    //!!! marche seulement avec nav webkit
-
-    var sunStyle = window.getComputedStyle(document.querySelector("#soleil"));
-    var sunMatrix = new WebKitCSSMatrix(sunStyle.transform);
-    var moonStyle = window.getComputedStyle(document.querySelector("#lune"));
-    var moonMatrix = new WebKitCSSMatrix(moonStyle.transform);
-    var sunWidth = 99 * sunMatrix.m11;
-    var moonWidth = -99 * moonMatrix.m11;
-    console.log(moonWidth);
-    document.querySelector("#lune").style.transform = "scaleX(-" + moonWidth + "%)";
-    document.querySelector("#soleil").style.transform = "scaleX(" + sunWidth + "%)";
-    document.querySelector("#lune").style.removeProperty("animation");
-    document.querySelector("#soleil").style.removeProperty("animation");
-    id = setInterval(frame, 10);
-
-    function frame() {
-      if (moonWidth <= 0) {
-        moonWidth = 0;
-        sunWidth = sunWidth + 1;
-        document.querySelector("#lune").style.transform = "scaleX(-" + moonWidth + "%)";
-        document.querySelector("#soleil").style.transform = "scaleX(" + sunWidth + "%)";
-      } else {
-        moonWidth = moonWidth - 1;
-        document.querySelector("#lune").style.transform = "scaleX(-" + moonWidth + "%)";
-      }
-
-      if (sunWidth >= 100) {
-        document.querySelector("#soleil").style.transform = "scaleX(" + sunWidth + "%)";
-        clearInterval(id);
-      }
-    }
-  };
+  if (props.start === "play" && props.seconds <= 1) {
+    document.querySelector(".cratere").style.transform = "scale(0%) rotate(289deg)";
+    document.querySelector(".cratere-2").style.transform = "scale(0%) rotate(289deg)";
+    document.querySelector(".cratere-3").style.transform = "scale(0%) rotate(289deg)";
+    document.querySelector(".cratere-4").style.transform = "scale(0%) rotate(289deg)";
+    document.querySelector(".cratere").style.animation = "cratere 0.5s forwards";
+    document.querySelector(".cratere-2").style.animation = "cratere 0.5s 0.25s forwards";
+    document.querySelector(".cratere-3").style.animation = "cratere 0.5s 0.25s forwards";
+    document.querySelector(".cratere-4").style.animation = "cratere 0.5s 0.5s forwards";
+  }
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("button", {
     id: "trigger",
     type: "button",
     onClick: function onClick() {
-      console.log(props.seconds);
-
       if (props.start === "stop" && props.seconds > 1) {
         props.setInitialTime(props.seconds);
-        console.log(props.initialTime);
         props.setStart("play");
-        document.querySelector("#soleil").style.animation = "eclipse-1 ".concat((props.seconds - 1) / 2, "s ease-in forwards");
-        document.querySelector("#lune").style.animation = "eclipse-2 ".concat((props.seconds - 1) / 2, "s ").concat((props.seconds - 1) / 2, "s ease-out forwards");
-        document.querySelector("body").style.animation = "bgcolor ".concat(props.seconds, "s forwards");
-        document.querySelector(".cratere").style.transform = "scale(0%) rotate(289deg)";
-        document.querySelector(".cratere-2").style.transform = "scale(0%) rotate(289deg)";
-        document.querySelector(".cratere-3").style.transform = "scale(0%) rotate(289deg)";
-        document.querySelector(".cratere-4").style.transform = "scale(0%) rotate(289deg)";
-        document.querySelector(".cratere").style.animation = "cratere 0.5s ".concat(props.seconds - 1, "s forwards");
-        document.querySelector(".cratere-2").style.animation = "cratere 0.5s ".concat(props.seconds - 0.75, "s forwards");
-        document.querySelector(".cratere-3").style.animation = "cratere 0.5s ".concat(props.seconds - 0.75, "s forwards");
-        document.querySelector(".cratere-4").style.animation = "cratere 0.5s ".concat(props.seconds - 0.5, "s forwards");
-      } else if (props.start === "pause") {
+        document.querySelector("#soleil").style.transition = "".concat((props.seconds - 1) / 2, "s ease-in transform");
+        document.querySelector("#soleil").style.transform = "scaleX(0%)";
+        document.querySelector("#lune").style.transition = "".concat((props.seconds - 1) / 2, "s ").concat((props.seconds - 1) / 2, "s ease-out transform");
+        document.querySelector("#lune").style.transform = "scaleX(-100%)"; // document.querySelector(
+        //     "#soleil",
+        // ).style.animation = `eclipse-1 ${
+        //     (props.seconds-1) / 2
+        // }s ease-in forwards`;
+        // document.querySelector(
+        //     "#lune",
+        // ).style.animation = `eclipse-2 ${(props.seconds-1) / 2}s ${
+        //     (props.seconds-1) / 2
+        // }s ease-out forwards`;
+        // document.querySelector(
+        //     "body",
+        // ).style.animation = `bgcolor ${
+        //     props.seconds
+        // }s forwards`;
+      } else if (props.start === "pause" && props.seconds > 1) {
         props.setStart("play");
-        document.querySelector("#soleil").style.animationPlayState = "running";
-        document.querySelector("#lune").style.animationPlayState = "running";
-        document.querySelector("body").style.animationPlayState = "running";
-        document.querySelector(".cratere").style.animationPlayState = "running";
-        document.querySelector(".cratere-2").style.animationPlayState = "running";
-        document.querySelector(".cratere-3").style.animationPlayState = "running";
-        document.querySelector(".cratere-4").style.animationPlayState = "running";
+        var moonStyle = window.getComputedStyle(document.querySelector("#lune"));
+        var moonMatrix = new WebKitCSSMatrix(moonStyle.transform);
+        var moonTransformState = 100 * moonMatrix.m11;
+        document.querySelector("#soleil").style.transition = "".concat((props.initialTime - 1) / 2 - (props.initialTime - props.seconds), "s linear transform");
+        document.querySelector("#soleil").style.transform = "scaleX(0%)";
+
+        if (props.initialTime - props.seconds < props.initialTime / 2) {
+          //delay
+          document.querySelector("#lune").style.transition = "".concat((props.initialTime - 1) / 2, "s ").concat(props.seconds - (props.initialTime / 2 + 0.5), "s ease-out transform");
+          document.querySelector("#lune").style.transform = "scaleX(-100%)";
+        } else {
+          //no delay
+          document.querySelector("#lune").style.transition = "".concat(props.seconds - 1, "s ease-out transform");
+          document.querySelector("#lune").style.transform = "scaleX(-100%)";
+        } // document.querySelector(
+        //     "#soleil",
+        // ).style.animationPlayState = "running";
+        // document.querySelector(
+        //     "#lune",
+        // ).style.animationPlayState = "running";
+        // document.querySelector(
+        //     "body",
+        // ).style.animationPlayState = "running";
+        // document.querySelector(
+        //     ".cratere"
+        // ).style.animationPlayState = "running"; 
+        // document.querySelector(
+        //     ".cratere-2"
+        // ).style.animationPlayState = "running"; 
+        // document.querySelector(
+        //     ".cratere-3"
+        // ).style.animationPlayState = "running"; 
+        // document.querySelector(
+        //     ".cratere-4"
+        // ).style.animationPlayState = "running"; 
+
       } else {
         props.setStart("pause");
-        document.querySelector("#soleil").style.animationPlayState = "paused";
-        document.querySelector("#lune").style.animationPlayState = "paused";
-        document.querySelector("body").style.animationPlayState = "paused";
-        document.querySelector(".cratere").style.animationPlayState = "paused";
-        document.querySelector(".cratere-2").style.animationPlayState = "paused";
-        document.querySelector(".cratere-3").style.animationPlayState = "paused";
-        document.querySelector(".cratere-4").style.animationPlayState = "paused";
+        var sunStyle = window.getComputedStyle(document.querySelector("#soleil"));
+        var sunMatrix = new WebKitCSSMatrix(sunStyle.transform);
+        var sunTransformState = 100 * sunMatrix.m11;
+
+        var _moonStyle = window.getComputedStyle(document.querySelector("#lune"));
+
+        var _moonMatrix = new WebKitCSSMatrix(_moonStyle.transform);
+
+        var _moonTransformState = 100 * _moonMatrix.m11;
+
+        document.querySelector("#soleil").style.removeProperty("transition");
+        document.querySelector("#soleil").style.transform = "scaleX(".concat(sunTransformState, "%)");
+        document.querySelector("#lune").style.removeProperty("transition");
+        document.querySelector("#lune").style.transform = "scaleX(".concat(_moonTransformState, "%)"); // document.querySelector("#lune").style.transition = `${(props.seconds-1)/2}s ${(props.seconds-1)/2}s linear transform`;
+        // document.querySelector("#lune").style.transform = `scaleX(-100%)`;
+        // document.querySelector(
+        //     "#soleil",
+        // ).style.animationPlayState = "paused";
+        // document.querySelector(
+        //     "#lune",
+        // ).style.animationPlayState = "paused";
+        // document.querySelector(
+        //     "body",
+        // ).style.animationPlayState = "paused";
+        // document.querySelector(
+        //     ".cratere"
+        // ).style.animationPlayState = "paused"; 
+        // document.querySelector(
+        //     ".cratere-2"
+        // ).style.animationPlayState = "paused"; 
+        // document.querySelector(
+        //     ".cratere-3"
+        // ).style.animationPlayState = "paused"; 
+        // document.querySelector(
+        //     ".cratere-4"
+        // ).style.animationPlayState = "paused"; 
       }
     }
   }, "Start/Pause"), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: function onClick() {
-      resetAnim();
+      // resetAnim();
       props.setStart("stop");
       setTimeout(function () {
         return props.setSeconds(props.seconds + 10);
@@ -29719,7 +29811,7 @@ var Controls = function Controls(props) {
   }, "+"), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: function onClick() {
-      resetAnim();
+      // resetAnim();
       props.setStart("stop");
 
       if (props.seconds > 30) {
@@ -29735,11 +29827,22 @@ var Controls = function Controls(props) {
   }, "-"), /*#__PURE__*/_react.default.createElement("button", {
     type: "button",
     onClick: function onClick() {
-      props.setStart("stop");
-      resetSunEclipse();
-      setTimeout(function () {
-        return props.setSeconds(props.initialTime);
-      }, 100);
+      if (props.seconds > 1 || props.seconds === 0) {
+        props.setStart("stop");
+
+        if (props.seconds === 0) {
+          ResetCraters();
+          setTimeout(function () {
+            return ResetSunEclipse();
+          }, 1000);
+        } else {
+          ResetSunEclipse();
+        }
+
+        setTimeout(function () {
+          return props.setSeconds(props.initialTime);
+        }, 100);
+      }
     }
   }, "Reset"));
 };
@@ -29755,6 +29858,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
+
+var _Controls = require("./Controls");
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
@@ -29781,9 +29886,13 @@ var Modal = function Modal(props) {
     inputEl.style.display = "none";
     props.setStart("stop");
     props.setSeconds(props.initialTime);
+    (0, _Controls.ResetCraters)();
+    setTimeout(function () {
+      return (0, _Controls.ResetSunEclipse)();
+    }, 1000);
     setTimeout(function () {
       return props.setStart("play");
-    }, 1000);
+    }, 4000);
   };
 
   return /*#__PURE__*/_react.default.createElement("div", {
@@ -29805,7 +29914,7 @@ var Modal = function Modal(props) {
 
 var _default = Modal;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js"}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./Controls":"components/Controls.js"}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
 var bundleURL = null;
 
 function getBundleURLCached() {
