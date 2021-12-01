@@ -29574,11 +29574,37 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var Timer = function Timer(props) {
+  if (props.seconds > 0.2 && props.start === "play") {
+    (0, _react.useEffect)(function () {
+      return setTimeout(function () {
+        return props.setSeconds(props.seconds - 0.1);
+      }, 100);
+    });
+
+    if (props.seconds === props.initialTime) {
+      document.querySelector("#soleil").style.transition = "".concat((props.seconds - 1) / 2, "s ease-in transform");
+      document.querySelector("#soleil").style.transform = "scaleX(0%)";
+      document.querySelector("#lune").style.transition = "".concat((props.seconds - 1) / 2, "s ").concat((props.seconds - 1) / 2, "s ease-out transform");
+      document.querySelector("#lune").style.transform = "scaleX(-100%)";
+      document.body.style.transition = "".concat(props.seconds - 1, "s linear background-position-x");
+      document.body.style.backgroundPositionX = "100%";
+    }
+  }
+
+  if (props.seconds < 0.2 && props.start === "play") {
+    (0, _react.useEffect)(function () {
+      props.setSeconds(0);
+      props.setStart("finished");
+    });
+  }
+
   var minutes = "00";
 
   if (props.seconds > 59) {
@@ -29595,7 +29621,12 @@ var Timer = function Timer(props) {
     seconds = "0".concat(seconds);
   }
 
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("p", null, minutes, ":", seconds));
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("p", {
+    className: "timer",
+    onClick: function onClick() {
+      return console.log(props.start);
+    }
+  }, minutes, ":", seconds));
 };
 
 var _default = Timer;
@@ -29615,10 +29646,9 @@ function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "functio
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 var ResetCraters = function ResetCraters() {
-  document.querySelector(".cratere").style.transform = "scale(100%) rotate(289deg)";
-  document.querySelector(".cratere-2").style.transform = "scale(100%) rotate(289deg)";
-  document.querySelector(".cratere-3").style.transform = "scale(100%) rotate(289deg)";
-  document.querySelector(".cratere-4").style.transform = "scale(100%) rotate(289deg)";
+  document.querySelector(".crateres").querySelectorAll("div").forEach(function (e) {
+    return e.style.transform = "scale(100%) rotate(289deg)";
+  });
   document.querySelector(".cratere").style.animation = "cratere-reverse 0.5s 0.5s forwards";
   document.querySelector(".cratere-2").style.animation = "cratere-reverse 0.5s 0.25s forwards";
   document.querySelector(".cratere-3").style.animation = "cratere-reverse 0.5s forwards";
@@ -29638,13 +29668,23 @@ var ResetSunEclipse = function ResetSunEclipse() {
   var moonMatrix = new WebKitCSSMatrix(moonStyle.transform);
   var sunWidth = 99 * sunMatrix.m11;
   var moonWidth = -99 * moonMatrix.m11;
+  var bgStyle = window.getComputedStyle(document.body);
+  var bgPos = bgStyle.backgroundPositionX;
+  var bgPosValue = bgPos.substr(0, bgPos.length - 1);
   document.querySelector("#lune").style.transform = "scaleX(-" + moonWidth + "%)";
   document.querySelector("#soleil").style.transform = "scaleX(" + sunWidth + "%)";
+  document.body.style.backgroundPositionX = "".concat(bgPosValue, "%");
   document.querySelector("#lune").style.removeProperty("transition");
   document.querySelector("#soleil").style.removeProperty("transition");
+  document.body.style.removeProperty("transition");
   id = setInterval(frame, 10);
 
   function frame() {
+    if (bgPosValue > 1) {
+      bgPosValue -= 0.5;
+      document.body.style.backgroundPositionX = "".concat(bgPosValue, "%");
+    }
+
     if (moonWidth <= 0) {
       moonWidth = 0;
       sunWidth = sunWidth + 1;
@@ -29659,6 +29699,7 @@ var ResetSunEclipse = function ResetSunEclipse() {
       sunWidth = 100;
       document.querySelector("#soleil").style.transform = "scaleX(" + sunWidth + "%)";
       clearInterval(id);
+      document.body.style.backgroundPositionX = "0%";
     }
   }
 };
@@ -29666,185 +29707,259 @@ var ResetSunEclipse = function ResetSunEclipse() {
 exports.ResetSunEclipse = ResetSunEclipse;
 
 var Controls = function Controls(props) {
-  if (props.seconds > 0.2 && props.start === "play") {
-    (0, _react.useEffect)(function () {
-      return setTimeout(function () {
-        return props.setSeconds(props.seconds - 0.1);
-      }, 100);
-    });
-    document.querySelector("#soleil").style.transition = "".concat((props.seconds - 1) / 2, "s ease-in transform");
-    document.querySelector("#soleil").style.transform = "scaleX(0%)";
-    document.querySelector("#lune").style.transition = "".concat((props.seconds - 1) / 2, "s ").concat((props.seconds - 1) / 2, "s ease-out transform");
-    document.querySelector("#lune").style.transform = "scaleX(-100%)";
-  }
-
-  if (props.seconds < 0.2 && props.start === "play") {
-    (0, _react.useEffect)(function () {
-      props.setSeconds(0);
-      props.setStart("stop");
-    });
-  }
-
+  // useEffect(()=>{if(props.start === "finished"){
+  //     document.querySelector(".pause").style.pointerEvents = "none";
+  //     document.querySelector(".plus").style.pointerEvents = "none";
+  //     document.querySelector(".minus").style.pointerEvents = "none";
+  // }
+  // })
   if (props.start === "play" && props.seconds <= 1) {
-    document.querySelector(".cratere").style.transform = "scale(0%) rotate(289deg)";
-    document.querySelector(".cratere-2").style.transform = "scale(0%) rotate(289deg)";
-    document.querySelector(".cratere-3").style.transform = "scale(0%) rotate(289deg)";
-    document.querySelector(".cratere-4").style.transform = "scale(0%) rotate(289deg)";
+    document.querySelector(".crateres").querySelectorAll("div").forEach(function (e) {
+      return e.style.transform = "scale(0%) rotate(289deg)";
+    });
     document.querySelector(".cratere").style.animation = "cratere 0.5s forwards";
     document.querySelector(".cratere-2").style.animation = "cratere 0.5s 0.25s forwards";
     document.querySelector(".cratere-3").style.animation = "cratere 0.5s 0.25s forwards";
     document.querySelector(".cratere-4").style.animation = "cratere 0.5s 0.5s forwards";
   }
 
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("button", {
-    id: "trigger",
-    type: "button",
-    onClick: function onClick() {
-      if (props.start === "stop" && props.seconds > 1) {
-        props.setInitialTime(props.seconds);
-        props.setStart("play");
-        document.querySelector("#soleil").style.transition = "".concat((props.seconds - 1) / 2, "s ease-in transform");
-        document.querySelector("#soleil").style.transform = "scaleX(0%)";
-        document.querySelector("#lune").style.transition = "".concat((props.seconds - 1) / 2, "s ").concat((props.seconds - 1) / 2, "s ease-out transform");
-        document.querySelector("#lune").style.transform = "scaleX(-100%)"; // document.querySelector(
-        //     "#soleil",
-        // ).style.animation = `eclipse-1 ${
-        //     (props.seconds-1) / 2
-        // }s ease-in forwards`;
-        // document.querySelector(
-        //     "#lune",
-        // ).style.animation = `eclipse-2 ${(props.seconds-1) / 2}s ${
-        //     (props.seconds-1) / 2
-        // }s ease-out forwards`;
-        // document.querySelector(
-        //     "body",
-        // ).style.animation = `bgcolor ${
-        //     props.seconds
-        // }s forwards`;
-      } else if (props.start === "pause" && props.seconds > 1) {
-        props.setStart("play");
-        var moonStyle = window.getComputedStyle(document.querySelector("#lune"));
-        var moonMatrix = new WebKitCSSMatrix(moonStyle.transform);
-        var moonTransformState = 100 * moonMatrix.m11;
-        document.querySelector("#soleil").style.transition = "".concat((props.initialTime - 1) / 2 - (props.initialTime - props.seconds), "s linear transform");
-        document.querySelector("#soleil").style.transform = "scaleX(0%)";
+  var playPauseButton = function playPauseButton() {
+    if ((props.start === "stop" || props.start === "start") && props.seconds > 1) {
+      props.setInitialTime(props.seconds);
+      props.setStart("play");
+      document.querySelector("#soleil").style.transition = "".concat((props.seconds - 1) / 2, "s ease-in transform");
+      document.querySelector("#soleil").style.transform = "scaleX(0%)";
+      document.querySelector("#lune").style.transition = "".concat((props.seconds - 1) / 2, "s ").concat((props.seconds - 1) / 2, "s ease-out transform");
+      document.querySelector("#lune").style.transform = "scaleX(-100%)";
+      document.body.style.transition = "".concat(props.seconds - 1, "s linear background-position-x");
+      document.body.style.backgroundPositionX = "100%";
+    } else if (props.start === "pause" && props.seconds > 1) {
+      props.setStart("play");
+      document.querySelector("#soleil").style.transition = "".concat((props.initialTime - 1) / 2 - (props.initialTime - props.seconds), "s linear transform");
+      document.querySelector("#soleil").style.transform = "scaleX(0%)";
+      document.body.style.transition = "".concat(props.seconds - 1, "s linear background-position-x");
+      document.body.style.backgroundPositionX = "100%";
 
-        if (props.initialTime - props.seconds < props.initialTime / 2) {
-          //delay
-          document.querySelector("#lune").style.transition = "".concat((props.initialTime - 1) / 2, "s ").concat(props.seconds - (props.initialTime / 2 + 0.5), "s ease-out transform");
-          document.querySelector("#lune").style.transform = "scaleX(-100%)";
-        } else {
-          //no delay
-          document.querySelector("#lune").style.transition = "".concat(props.seconds - 1, "s ease-out transform");
-          document.querySelector("#lune").style.transform = "scaleX(-100%)";
-        } // document.querySelector(
-        //     "#soleil",
-        // ).style.animationPlayState = "running";
-        // document.querySelector(
-        //     "#lune",
-        // ).style.animationPlayState = "running";
-        // document.querySelector(
-        //     "body",
-        // ).style.animationPlayState = "running";
-        // document.querySelector(
-        //     ".cratere"
-        // ).style.animationPlayState = "running"; 
-        // document.querySelector(
-        //     ".cratere-2"
-        // ).style.animationPlayState = "running"; 
-        // document.querySelector(
-        //     ".cratere-3"
-        // ).style.animationPlayState = "running"; 
-        // document.querySelector(
-        //     ".cratere-4"
-        // ).style.animationPlayState = "running"; 
-
+      if (props.initialTime - props.seconds < props.initialTime / 2) {
+        //delay
+        document.querySelector("#lune").style.transition = "".concat((props.initialTime - 1) / 2, "s ").concat(props.seconds - (props.initialTime / 2 + 0.5), "s ease-out transform");
+        document.querySelector("#lune").style.transform = "scaleX(-100%)";
       } else {
-        props.setStart("pause");
-        var sunStyle = window.getComputedStyle(document.querySelector("#soleil"));
-        var sunMatrix = new WebKitCSSMatrix(sunStyle.transform);
-        var sunTransformState = 100 * sunMatrix.m11;
-
-        var _moonStyle = window.getComputedStyle(document.querySelector("#lune"));
-
-        var _moonMatrix = new WebKitCSSMatrix(_moonStyle.transform);
-
-        var _moonTransformState = 100 * _moonMatrix.m11;
-
-        document.querySelector("#soleil").style.removeProperty("transition");
-        document.querySelector("#soleil").style.transform = "scaleX(".concat(sunTransformState, "%)");
-        document.querySelector("#lune").style.removeProperty("transition");
-        document.querySelector("#lune").style.transform = "scaleX(".concat(_moonTransformState, "%)"); // document.querySelector("#lune").style.transition = `${(props.seconds-1)/2}s ${(props.seconds-1)/2}s linear transform`;
-        // document.querySelector("#lune").style.transform = `scaleX(-100%)`;
-        // document.querySelector(
-        //     "#soleil",
-        // ).style.animationPlayState = "paused";
-        // document.querySelector(
-        //     "#lune",
-        // ).style.animationPlayState = "paused";
-        // document.querySelector(
-        //     "body",
-        // ).style.animationPlayState = "paused";
-        // document.querySelector(
-        //     ".cratere"
-        // ).style.animationPlayState = "paused"; 
-        // document.querySelector(
-        //     ".cratere-2"
-        // ).style.animationPlayState = "paused"; 
-        // document.querySelector(
-        //     ".cratere-3"
-        // ).style.animationPlayState = "paused"; 
-        // document.querySelector(
-        //     ".cratere-4"
-        // ).style.animationPlayState = "paused"; 
+        //no delay
+        document.querySelector("#lune").style.transition = "".concat(props.seconds - 1, "s ease-out transform");
+        document.querySelector("#lune").style.transform = "scaleX(-100%)";
       }
+    } else {
+      props.setStart("pause");
+      var sunStyle = window.getComputedStyle(document.querySelector("#soleil"));
+      var sunMatrix = new WebKitCSSMatrix(sunStyle.transform);
+      var sunTransformState = 100 * sunMatrix.m11;
+      document.querySelector("#soleil").style.removeProperty("transition");
+      document.querySelector("#soleil").style.transform = "scaleX(".concat(sunTransformState, "%)");
+      var moonStyle = window.getComputedStyle(document.querySelector("#lune"));
+      var moonMatrix = new WebKitCSSMatrix(moonStyle.transform);
+      var moonTransformState = 100 * moonMatrix.m11;
+      document.querySelector("#lune").style.removeProperty("transition");
+      document.querySelector("#lune").style.transform = "scaleX(".concat(moonTransformState, "%)");
+      var bgStyle = window.getComputedStyle(document.body);
+      var bgPos = bgStyle.backgroundPositionX;
+      document.body.style.removeProperty("transition");
+      document.body.style.backgroundPositionX = "".concat(bgPos);
     }
-  }, "Start/Pause"), /*#__PURE__*/_react.default.createElement("button", {
+  };
+
+  return /*#__PURE__*/_react.default.createElement("div", {
+    className: "controls"
+  }, props.start === "play" ? /*#__PURE__*/_react.default.createElement("svg", {
+    width: "75",
+    height: "80",
+    viewBox: "0 0 70 80",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    id: "trigger",
+    className: "play",
     type: "button",
+    disabled: props.start === "reset" || props.start === "finished",
     onClick: function onClick() {
-      // resetAnim();
+      return playPauseButton();
+    }
+  }, /*#__PURE__*/_react.default.createElement("rect", {
+    x: "14.5",
+    y: "1.5",
+    width: "7",
+    height: "77",
+    rx: "3.5",
+    fill: "#FFA500",
+    stroke: "black",
+    strokeWidth: "2"
+  }), /*#__PURE__*/_react.default.createElement("rect", {
+    x: "44.5",
+    y: "1.5",
+    width: "7",
+    height: "77",
+    rx: "3.5",
+    fill: "#FFA500",
+    stroke: "black",
+    strokeWidth: "2"
+  })) : /*#__PURE__*/_react.default.createElement("svg", {
+    width: "75",
+    height: "88",
+    viewBox: "0 0 75 88",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    id: "trigger",
+    className: "pause",
+    type: "button",
+    disabled: props.start === "reset" || props.start === "finished",
+    onClick: function onClick() {
+      return playPauseButton();
+    }
+  }, /*#__PURE__*/_react.default.createElement("path", {
+    d: "M67 43.4641L6.99997 78.1051C4.33331 79.6447 0.999969 77.7202 0.999969 74.641V5.35899C0.999969 2.27978 4.33331 0.355283 6.99997 1.89488L67 36.5359C69.6666 38.0755 69.6666 41.9245 67 43.4641Z",
+    fill: "#FFA500",
+    stroke: "black",
+    strokeWidth: "2"
+  })), /*#__PURE__*/_react.default.createElement("svg", {
+    width: "88",
+    height: "88",
+    viewBox: "0 0 88 88",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    disabled: props.start === "reset" || props.start === "play" || props.start === "finished",
+    className: "plus",
+    onClick: function onClick() {
       props.setStart("stop");
       setTimeout(function () {
         return props.setSeconds(props.seconds + 10);
       }, 100);
     }
-  }, "+"), /*#__PURE__*/_react.default.createElement("button", {
-    type: "button",
+  }, /*#__PURE__*/_react.default.createElement("mask", {
+    id: "path-1-outside-1_7_11",
+    maskUnits: "userSpaceOnUse",
+    x: "0",
+    y: "0",
+    width: "80",
+    height: "80",
+    fill: "black"
+  }, /*#__PURE__*/_react.default.createElement("rect", {
+    fill: "white",
+    width: "80",
+    height: "80"
+  }), /*#__PURE__*/_react.default.createElement("path", {
+    fillRule: "evenodd",
+    clipRule: "evenodd",
+    d: "M40.4634 2C39.1837 2 38.1463 3.03739 38.1463 4.31707V38.1463H4.31707C3.03739 38.1463 2 39.1837 2 40.4634C2 41.7431 3.03739 42.7805 4.31707 42.7805H38.1463V75.6829C38.1463 76.9626 39.1837 78 40.4634 78C41.7431 78 42.7805 76.9626 42.7805 75.6829V42.7805H75.6829C76.9626 42.7805 78 41.7431 78 40.4634C78 39.1837 76.9626 38.1463 75.6829 38.1463H42.7805V4.31707C42.7805 3.03739 41.7431 2 40.4634 2Z"
+  })), /*#__PURE__*/_react.default.createElement("path", {
+    fillRule: "evenodd",
+    clipRule: "evenodd",
+    d: "M40.4634 2C39.1837 2 38.1463 3.03739 38.1463 4.31707V38.1463H4.31707C3.03739 38.1463 2 39.1837 2 40.4634C2 41.7431 3.03739 42.7805 4.31707 42.7805H38.1463V75.6829C38.1463 76.9626 39.1837 78 40.4634 78C41.7431 78 42.7805 76.9626 42.7805 75.6829V42.7805H75.6829C76.9626 42.7805 78 41.7431 78 40.4634C78 39.1837 76.9626 38.1463 75.6829 38.1463H42.7805V4.31707C42.7805 3.03739 41.7431 2 40.4634 2Z",
+    fill: "#FFA500"
+  }), /*#__PURE__*/_react.default.createElement("path", {
+    d: "M38.1463 38.1463V40.1463H40.1463V38.1463H38.1463ZM38.1463 42.7805H40.1463V40.7805H38.1463V42.7805ZM42.7805 42.7805V40.7805H40.7805V42.7805H42.7805ZM42.7805 38.1463H40.7805V40.1463H42.7805V38.1463ZM40.1463 4.31707C40.1463 4.14196 40.2883 4 40.4634 4V0C38.0791 0 36.1463 1.93282 36.1463 4.31707H40.1463ZM40.1463 38.1463V4.31707H36.1463V38.1463H40.1463ZM4.31707 40.1463H38.1463V36.1463H4.31707V40.1463ZM4 40.4634C4 40.2883 4.14196 40.1463 4.31707 40.1463V36.1463C1.93282 36.1463 0 38.0791 0 40.4634H4ZM4.31707 40.7805C4.14196 40.7805 4 40.6385 4 40.4634H0C0 42.8476 1.93282 44.7805 4.31707 44.7805V40.7805ZM38.1463 40.7805H4.31707V44.7805H38.1463V40.7805ZM40.1463 75.6829V42.7805H36.1463V75.6829H40.1463ZM40.4634 76C40.2883 76 40.1463 75.858 40.1463 75.6829H36.1463C36.1463 78.0672 38.0791 80 40.4634 80V76ZM40.7805 75.6829C40.7805 75.858 40.6385 76 40.4634 76V80C42.8476 80 44.7805 78.0672 44.7805 75.6829H40.7805ZM40.7805 42.7805V75.6829H44.7805V42.7805H40.7805ZM75.6829 40.7805H42.7805V44.7805H75.6829V40.7805ZM76 40.4634C76 40.6385 75.858 40.7805 75.6829 40.7805V44.7805C78.0672 44.7805 80 42.8476 80 40.4634H76ZM75.6829 40.1463C75.858 40.1463 76 40.2883 76 40.4634H80C80 38.0791 78.0672 36.1463 75.6829 36.1463V40.1463ZM42.7805 40.1463H75.6829V36.1463H42.7805V40.1463ZM40.7805 4.31707V38.1463H44.7805V4.31707H40.7805ZM40.4634 4C40.6385 4 40.7805 4.14196 40.7805 4.31707H44.7805C44.7805 1.93282 42.8476 0 40.4634 0V4Z",
+    fill: "black",
+    mask: "url(#path-1-outside-1_7_11)"
+  })), /*#__PURE__*/_react.default.createElement("svg", {
+    width: "88",
+    height: "88",
+    viewBox: "0 0 88 88",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    disabled: props.start === "reset" || props.start === "play" || props.start === "finished" || props.seconds < 10,
+    className: "minus",
     onClick: function onClick() {
-      // resetAnim();
       props.setStart("stop");
 
-      if (props.seconds > 30) {
+      if (props.seconds - 10 > 10) {
         setTimeout(function () {
-          return props.setSeconds(props.seconds - 30);
+          return props.setSeconds(props.seconds - 10);
         }, 100);
       } else {
         setTimeout(function () {
-          return props.setSeconds(0);
+          return props.setSeconds(10);
         }, 100);
       }
     }
-  }, "-"), /*#__PURE__*/_react.default.createElement("button", {
-    type: "button",
+  }, /*#__PURE__*/_react.default.createElement("rect", {
+    x: "1",
+    y: "44",
+    width: "7",
+    height: "78",
+    rx: "3.5",
+    transform: "rotate(-90 1 44)",
+    fill: "#FFA500",
+    stroke: "black",
+    strokeWidth: "2"
+  })), /*#__PURE__*/_react.default.createElement("svg", {
+    width: "85",
+    height: "85",
+    viewBox: "0 0 85 85",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    className: "reset",
     onClick: function onClick() {
-      if (props.seconds > 1 || props.seconds === 0) {
-        props.setStart("stop");
+      if (props.start !== "start") {
+        if (props.seconds > 1 || props.seconds === 0) {
+          props.setStart("reset");
 
-        if (props.seconds === 0) {
-          ResetCraters();
+          if (props.seconds === 0) {
+            props.setStart("reset");
+            ResetCraters();
+            setTimeout(function () {
+              return ResetSunEclipse();
+            }, 1000);
+          } else {
+            props.setStart("reset");
+            ResetSunEclipse();
+          }
+
           setTimeout(function () {
-            return ResetSunEclipse();
-          }, 1000);
-        } else {
-          ResetSunEclipse();
-        }
+            return props.setSeconds(props.initialTime);
+          }, 100);
+          var id = setInterval(frame, 500);
 
-        setTimeout(function () {
-          return props.setSeconds(props.initialTime);
-        }, 100);
-      }
+          function frame() {
+            var bgStyle = window.getComputedStyle(document.body);
+            var bgPos = bgStyle.backgroundPositionX;
+
+            if (bgPos === "0%") {
+              props.setStart("start");
+              clearInterval(id);
+            }
+          }
+        }
+      } // document.querySelector(".pause").style.pointerEvents = "all";
+      // document.querySelector(".plus").style.pointerEvents = "all";
+      // document.querySelector(".minus").style.pointerEvents = "all";
+
     }
-  }, "Reset"));
+  }, /*#__PURE__*/_react.default.createElement("mask", {
+    id: "path-1-outside-1_8_31",
+    maskUnits: "userSpaceOnUse",
+    x: "-18.4374",
+    y: "-18.5108",
+    width: "125.158",
+    height: "125.158",
+    fill: "black"
+  }, /*#__PURE__*/_react.default.createElement("rect", {
+    fill: "white",
+    x: "-18.4374",
+    y: "-18.5108",
+    width: "125.158",
+    height: "125.158"
+  }), /*#__PURE__*/_react.default.createElement("path", {
+    fillRule: "evenodd",
+    clipRule: "evenodd",
+    d: "M53.1161 80.8439C54.4682 80.4662 55.0672 78.9254 54.4082 77.6859C53.8829 76.6979 52.7227 76.241 51.6428 76.534C36.0259 80.7707 19.002 73.8364 11.0843 58.9453C1.89155 41.6563 8.45487 20.1886 25.7439 10.9959C43.0329 1.80314 64.5006 8.36646 73.6933 25.6555C80.9229 39.2523 78.4074 55.4337 68.5936 66.1963L65.0629 62.6656C64.4329 62.0356 63.3558 62.4818 63.3558 63.3727L63.3558 73.3935C63.3558 73.9458 63.8035 74.3935 64.3558 74.3935L74.3766 74.3935C75.2675 74.3935 75.7137 73.3164 75.0837 72.6864L71.8116 69.4143C83.0008 57.2727 85.8978 38.9267 77.7067 23.5215C67.3354 4.01595 43.1155 -3.38882 23.6099 6.98245C4.10438 17.3537 -3.3004 41.5737 7.07088 61.0792C16.0522 77.9707 35.4191 85.7875 53.1161 80.8439Z"
+  })), /*#__PURE__*/_react.default.createElement("path", {
+    fillRule: "evenodd",
+    clipRule: "evenodd",
+    d: "M53.1161 80.8439C54.4682 80.4662 55.0672 78.9254 54.4082 77.6859C53.8829 76.6979 52.7227 76.241 51.6428 76.534C36.0259 80.7707 19.002 73.8364 11.0843 58.9453C1.89155 41.6563 8.45487 20.1886 25.7439 10.9959C43.0329 1.80314 64.5006 8.36646 73.6933 25.6555C80.9229 39.2523 78.4074 55.4337 68.5936 66.1963L65.0629 62.6656C64.4329 62.0356 63.3558 62.4818 63.3558 63.3727L63.3558 73.3935C63.3558 73.9458 63.8035 74.3935 64.3558 74.3935L74.3766 74.3935C75.2675 74.3935 75.7137 73.3164 75.0837 72.6864L71.8116 69.4143C83.0008 57.2727 85.8978 38.9267 77.7067 23.5215C67.3354 4.01595 43.1155 -3.38882 23.6099 6.98245C4.10438 17.3537 -3.3004 41.5737 7.07088 61.0792C16.0522 77.9707 35.4191 85.7875 53.1161 80.8439Z",
+    fill: "#FFA500"
+  }), /*#__PURE__*/_react.default.createElement("path", {
+    d: "M54.4082 77.6859L56.1741 76.7469L56.1741 76.7469L54.4082 77.6859ZM53.1161 80.8439L52.578 78.9176L52.578 78.9176L53.1161 80.8439ZM51.6428 76.534L52.1664 78.4642L52.1664 78.4642L51.6428 76.534ZM11.0843 58.9453L12.8502 58.0063L12.8502 58.0063L11.0843 58.9453ZM25.7439 10.9959L24.8049 9.22996L24.8049 9.22996L25.7439 10.9959ZM73.6933 25.6555L71.9274 26.5944L71.9274 26.5944L73.6933 25.6555ZM68.5936 66.1963L67.1794 67.6105L68.6603 69.0915L70.0715 67.5439L68.5936 66.1963ZM65.0629 62.6656L63.6487 64.0798L63.6487 64.0798L65.0629 62.6656ZM63.3558 63.3727L61.3558 63.3727L61.3558 63.3727L63.3558 63.3727ZM63.3558 73.3935L65.3558 73.3935L65.3558 73.3935L63.3558 73.3935ZM64.3558 74.3935L64.3558 72.3935H64.3558V74.3935ZM74.3766 74.3935L74.3766 76.3935H74.3766V74.3935ZM75.0837 72.6864L73.6695 74.1006L73.6695 74.1006L75.0837 72.6864ZM71.8116 69.4143L70.3409 68.059L69.0398 69.4709L70.3974 70.8285L71.8116 69.4143ZM77.7067 23.5215L79.4726 22.5826L79.4726 22.5826L77.7067 23.5215ZM23.6099 6.98245L22.671 5.21656L22.671 5.21656L23.6099 6.98245ZM7.07088 61.0792L8.83677 60.1403L7.07088 61.0792ZM52.6423 78.6248C52.6869 78.7088 52.6832 78.786 52.6609 78.8413C52.65 78.8684 52.6368 78.8845 52.6276 78.893C52.6208 78.8992 52.6083 78.9092 52.578 78.9176L53.6542 82.7701C56.3269 82.0235 57.3881 79.0302 56.1741 76.7469L52.6423 78.6248ZM52.1664 78.4642C52.4108 78.3979 52.5863 78.5196 52.6423 78.6248L56.1741 76.7469C55.1794 74.8763 53.0346 74.0841 51.1191 74.6037L52.1664 78.4642ZM9.31838 59.8842C17.684 75.6176 35.6683 82.94 52.1664 78.4642L51.1191 74.6037C36.3835 78.6014 20.3201 72.0552 12.8502 58.0063L9.31838 59.8842ZM24.8049 9.22996C6.54066 18.9413 -0.392913 41.6199 9.31838 59.8842L12.8502 58.0063C4.17601 41.6926 10.3691 21.4359 26.6828 12.7618L24.8049 9.22996ZM75.4592 24.7165C65.7479 6.45224 43.0692 -0.481321 24.8049 9.22996L26.6828 12.7618C42.9965 4.0876 63.2532 10.2807 71.9274 26.5944L75.4592 24.7165ZM70.0715 67.5439C80.4368 56.1764 83.0981 39.0832 75.4592 24.7165L71.9274 26.5944C78.7477 39.4215 76.3779 54.6911 67.1158 64.8487L70.0715 67.5439ZM63.6487 64.0798L67.1794 67.6105L70.0078 64.7821L66.4771 61.2514L63.6487 64.0798ZM65.3558 63.3727C65.3558 64.2636 64.2787 64.7098 63.6487 64.0798L66.4771 61.2514C64.5872 59.3615 61.3558 60.7 61.3558 63.3727L65.3558 63.3727ZM65.3558 73.3935L65.3558 63.3727L61.3558 63.3727L61.3558 73.3935L65.3558 73.3935ZM64.3558 72.3935C64.9081 72.3935 65.3558 72.8412 65.3558 73.3935L61.3558 73.3935C61.3558 75.0504 62.6989 76.3935 64.3558 76.3935V72.3935ZM74.3766 72.3935L64.3558 72.3935L64.3558 76.3935L74.3766 76.3935L74.3766 72.3935ZM73.6695 74.1006C73.0395 73.4707 73.4857 72.3935 74.3766 72.3935V76.3935C77.0493 76.3935 78.3878 73.1621 76.4979 71.2722L73.6695 74.1006ZM70.3974 70.8285L73.6695 74.1006L76.4979 71.2722L73.2258 68.0001L70.3974 70.8285ZM75.9408 24.4604C83.7209 39.0927 80.9725 56.5223 70.3409 68.059L73.2824 70.7697C85.0291 58.023 88.0747 38.7608 79.4726 22.5826L75.9408 24.4604ZM24.5489 8.74835C43.0791 -1.10436 66.0881 5.93017 75.9408 24.4604L79.4726 22.5826C68.5827 2.10173 43.1518 -5.67328 22.671 5.21656L24.5489 8.74835ZM8.83677 60.1403C-1.01594 41.61 6.0186 18.6011 24.5489 8.74835L22.671 5.21656C2.19016 16.1064 -5.58486 41.5373 5.30498 62.0182L8.83677 60.1403ZM52.578 78.9176C35.7663 83.6139 17.3679 76.185 8.83677 60.1403L5.30498 62.0182C14.7366 79.7564 35.0719 87.961 53.6542 82.7701L52.578 78.9176Z",
+    fill: "black",
+    mask: "url(#path-1-outside-1_8_31)"
+  })));
 };
 
 var _default = Controls;
@@ -29884,15 +29999,23 @@ var Modal = function Modal(props) {
   var restart = function restart() {
     var inputEl = element.current;
     inputEl.style.display = "none";
-    props.setStart("stop");
+    props.setStart("reset");
     props.setSeconds(props.initialTime);
     (0, _Controls.ResetCraters)();
     setTimeout(function () {
       return (0, _Controls.ResetSunEclipse)();
     }, 1000);
-    setTimeout(function () {
-      return props.setStart("play");
-    }, 4000);
+    var id = setInterval(frame, 500);
+
+    function frame() {
+      var bgStyle = window.getComputedStyle(document.body);
+      var bgPos = bgStyle.backgroundPositionX;
+
+      if (bgPos === "0%") {
+        props.setStart("play");
+        clearInterval(id);
+      }
+    }
   };
 
   return /*#__PURE__*/_react.default.createElement("div", {
@@ -30023,12 +30146,12 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var App = function App() {
-  var _useState = (0, _react.useState)(5),
+  var _useState = (0, _react.useState)(10),
       _useState2 = _slicedToArray(_useState, 2),
       seconds = _useState2[0],
       setSeconds = _useState2[1];
 
-  var _useState3 = (0, _react.useState)("stop"),
+  var _useState3 = (0, _react.useState)("start"),
       _useState4 = _slicedToArray(_useState3, 2),
       start = _useState4[0],
       setStart = _useState4[1];
@@ -30038,9 +30161,21 @@ var App = function App() {
       initialTime = _useState6[0],
       setInitialTime = _useState6[1];
 
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("h2", {
-    className: "title"
-  }, "Pomodoro"), /*#__PURE__*/_react.default.createElement("div", {
+  (0, _react.useEffect)(function () {
+    if (document.querySelector(".play")) {
+      //retourne ta condition
+      if (start !== "finished" || start !== "reset") {
+        document.querySelector(".play").style.pointerEvents = "all";
+        document.querySelector(".plus").style.pointerEvents = "all";
+        document.querySelector(".minus").style.pointerEvents = "all";
+      } else {
+        document.querySelector(".play").style.pointerEvents = "none";
+        document.querySelector(".plus").style.pointerEvents = "none";
+        document.querySelector(".minus").style.pointerEvents = "none";
+      }
+    }
+  }, [start]);
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("div", {
     className: "div"
   }, /*#__PURE__*/_react.default.createElement("div", {
     className: "crateres"
@@ -30062,17 +30197,112 @@ var App = function App() {
     id: "soleil"
   }), /*#__PURE__*/_react.default.createElement("div", {
     className: "soleil-2"
-  })), /*#__PURE__*/_react.default.createElement("div", {
-    className: "nuage"
-  }, /*#__PURE__*/_react.default.createElement("div", {
-    className: "nuage-bas"
-  }), /*#__PURE__*/_react.default.createElement("div", {
-    className: "nuage-haut"
-  }), /*#__PURE__*/_react.default.createElement("div", {
-    className: "nuage-haut2"
+  })), /*#__PURE__*/_react.default.createElement("svg", {
+    width: "304",
+    height: "184",
+    viewBox: "0 0 152 92",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    className: "svg"
+  }, /*#__PURE__*/_react.default.createElement("mask", {
+    id: "path-1-outside-1_3_19",
+    maskUnits: "userSpaceOnUse",
+    x: "0",
+    y: "0",
+    width: "152",
+    height: "92",
+    fill: "black"
+  }, /*#__PURE__*/_react.default.createElement("rect", {
+    fill: "white",
+    width: "152",
+    height: "92"
+  }), /*#__PURE__*/_react.default.createElement("path", {
+    fillRule: "evenodd",
+    clipRule: "evenodd",
+    d: "M134 51C134 51.0746 134 51.1491 134 51.2234C143.622 52.6707 151 60.9738 151 71C151 82.0457 142.046 91 131 91H21C9.9543 91 1 82.0457 1 71C1 61.3217 7.8746 53.249 17.0071 51.3986C17.3114 38.5095 27.3705 28.0346 40.0864 27.0721C48.5688 11.5378 65.0538 1 84 1C111.614 1 134 23.3858 134 51Z"
+  })), /*#__PURE__*/_react.default.createElement("path", {
+    fillRule: "evenodd",
+    clipRule: "evenodd",
+    d: "M134 51C134 51.0746 134 51.1491 134 51.2234C143.622 52.6707 151 60.9738 151 71C151 82.0457 142.046 91 131 91H21C9.9543 91 1 82.0457 1 71C1 61.3217 7.8746 53.249 17.0071 51.3986C17.3114 38.5095 27.3705 28.0346 40.0864 27.0721C48.5688 11.5378 65.0538 1 84 1C111.614 1 134 23.3858 134 51Z",
+    fill: "#ADD8E6"
+  }), /*#__PURE__*/_react.default.createElement("path", {
+    d: "M134 51.2234L133 51.2191L132.996 52.0837L133.851 52.2123L134 51.2234ZM17.0071 51.3986L17.2057 52.3787L17.988 52.2202L18.0068 51.4222L17.0071 51.3986ZM40.0864 27.0721L40.1619 28.0693L40.7037 28.0283L40.9641 27.5514L40.0864 27.0721ZM135 51.2277C135 51.152 135 51.0761 135 51H133C133 51.0731 133 51.1462 133 51.2191L135 51.2277ZM152 71C152 60.4715 144.253 51.7543 134.148 50.2345L133.851 52.2123C142.992 53.5871 150 61.476 150 71H152ZM131 92C142.598 92 152 82.598 152 71H150C150 81.4934 141.493 90 131 90V92ZM21 92H131V90H21V92ZM0 71C0 82.598 9.40202 92 21 92V90C10.5066 90 2 81.4934 2 71H0ZM16.8085 50.4186C7.21897 52.3615 0 60.8366 0 71H2C2 61.8067 8.53022 54.1365 17.2057 52.3787L16.8085 50.4186ZM18.0068 51.4222C18.2989 39.0496 27.9558 28.9932 40.1619 28.0693L40.0109 26.075C26.7853 27.0761 16.3238 37.9694 16.0074 51.375L18.0068 51.4222ZM84 0C64.6735 0 47.8593 10.7505 39.2087 26.5929L40.9641 27.5514C49.2782 12.3252 65.434 2 84 2V0ZM135 51C135 22.8335 112.167 0 84 0V2C111.062 2 133 23.938 133 51H135Z",
+    fill: "black",
+    mask: "url(#path-1-outside-1_3_19)"
+  }), /*#__PURE__*/_react.default.createElement("path", {
+    d: "M66 52C66 38.1929 54.8071 27 41 27C27.1929 27 16 38.1929 16 52",
+    stroke: "black"
+  })), /*#__PURE__*/_react.default.createElement("svg", {
+    width: "94",
+    height: "58",
+    viewBox: "0 0 94 58",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    className: "svg2"
+  }, /*#__PURE__*/_react.default.createElement("mask", {
+    id: "path-1-outside-1_4_23",
+    maskUnits: "userSpaceOnUse",
+    x: "0",
+    y: "0",
+    width: "94",
+    height: "58",
+    fill: "black"
+  }, /*#__PURE__*/_react.default.createElement("rect", {
+    fill: "white",
+    width: "94",
+    height: "58"
+  }), /*#__PURE__*/_react.default.createElement("path", {
+    fillRule: "evenodd",
+    clipRule: "evenodd",
+    d: "M26.0196 26C26.5445 12.6565 37.5278 2 51 2C64.4722 2 75.4555 12.6565 75.9804 26H77C85.2843 26 92 32.7157 92 41C92 49.2843 85.2843 56 77 56H17C8.71573 56 2 49.2843 2 41C2 32.7157 8.71573 26 17 26H26.0196Z"
+  })), /*#__PURE__*/_react.default.createElement("path", {
+    fillRule: "evenodd",
+    clipRule: "evenodd",
+    d: "M26.0196 26C26.5445 12.6565 37.5278 2 51 2C64.4722 2 75.4555 12.6565 75.9804 26H77C85.2843 26 92 32.7157 92 41C92 49.2843 85.2843 56 77 56H17C8.71573 56 2 49.2843 2 41C2 32.7157 8.71573 26 17 26H26.0196Z",
+    fill: "#ADD8E6"
+  }), /*#__PURE__*/_react.default.createElement("path", {
+    d: "M26.0196 26V28H27.9425L28.0181 26.0786L26.0196 26ZM75.9804 26L73.9819 26.0786L74.0575 28H75.9804V26ZM28.0181 26.0786C28.5009 13.804 38.606 4 51 4V0C36.4496 0 24.5881 11.509 24.0212 25.9214L28.0181 26.0786ZM51 4C63.394 4 73.4991 13.804 73.9819 26.0786L77.9788 25.9214C77.4119 11.509 65.5504 0 51 0V4ZM75.9804 28H77V24H75.9804V28ZM77 28C84.1797 28 90 33.8203 90 41H94C94 31.6112 86.3888 24 77 24V28ZM90 41C90 48.1797 84.1797 54 77 54V58C86.3888 58 94 50.3888 94 41H90ZM77 54H17V58H77V54ZM17 54C9.8203 54 4 48.1797 4 41H0C0 50.3888 7.61116 58 17 58V54ZM4 41C4 33.8203 9.8203 28 17 28V24C7.61116 24 0 31.6112 0 41H4ZM17 28H26.0196V24H17V28Z",
+    fill: "black",
+    mask: "url(#path-1-outside-1_4_23)"
+  })), /*#__PURE__*/_react.default.createElement("svg", {
+    width: "129",
+    height: "84",
+    viewBox: "0 0 129 84",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    className: "svg3"
+  }, /*#__PURE__*/_react.default.createElement("mask", {
+    id: "path-1-outside-1_5_28",
+    maskUnits: "userSpaceOnUse",
+    x: "0",
+    y: "0",
+    width: "129",
+    height: "84",
+    fill: "black"
+  }, /*#__PURE__*/_react.default.createElement("rect", {
+    fill: "white",
+    width: "129",
+    height: "84"
+  }), /*#__PURE__*/_react.default.createElement("path", {
+    fillRule: "evenodd",
+    clipRule: "evenodd",
+    d: "M18.8286 41.3043C18.7214 40.1829 18.6666 39.0465 18.6666 37.8974C18.6666 18.0718 34.9895 2 55.1249 2C68.0197 2 79.351 8.5914 85.8329 18.5389C86.6963 18.4538 87.5721 18.4103 88.4582 18.4103C102.339 18.4103 113.684 29.1037 114.458 42.5805C121.828 45.6912 127 52.9851 127 61.4872C127 72.8161 117.816 82 106.487 82H22.5128C11.1839 82 2 72.8161 2 61.4872C2 51.416 9.25793 43.04 18.8286 41.3043Z"
+  })), /*#__PURE__*/_react.default.createElement("path", {
+    fillRule: "evenodd",
+    clipRule: "evenodd",
+    d: "M18.8286 41.3043C18.7214 40.1829 18.6666 39.0465 18.6666 37.8974C18.6666 18.0718 34.9895 2 55.1249 2C68.0197 2 79.351 8.5914 85.8329 18.5389C86.6963 18.4538 87.5721 18.4103 88.4582 18.4103C102.339 18.4103 113.684 29.1037 114.458 42.5805C121.828 45.6912 127 52.9851 127 61.4872C127 72.8161 117.816 82 106.487 82H22.5128C11.1839 82 2 72.8161 2 61.4872C2 51.416 9.25793 43.04 18.8286 41.3043Z",
+    fill: "#ADD8E6"
+  }), /*#__PURE__*/_react.default.createElement("path", {
+    d: "M18.8286 41.3043L19.1855 43.2722L20.9945 42.9441L20.8195 41.114L18.8286 41.3043ZM85.8329 18.5389L84.1573 19.6308L84.8204 20.6484L86.0291 20.5293L85.8329 18.5389ZM114.458 42.5805L112.461 42.6951L112.532 43.9387L113.68 44.423L114.458 42.5805ZM20.8195 41.114C20.7184 40.0557 20.6666 38.9828 20.6666 37.8974H16.6666C16.6666 39.1101 16.7244 40.3101 16.8377 41.4947L20.8195 41.114ZM20.6666 37.8974C20.6666 19.2055 36.0647 4 55.1249 4V0C33.9143 0 16.6666 16.9381 16.6666 37.8974H20.6666ZM55.1249 4C67.3244 4 78.0339 10.2335 84.1573 19.6308L87.5086 17.4471C80.6681 6.94929 68.7151 0 55.1249 0V4ZM86.0291 20.5293C86.8274 20.4506 87.6377 20.4103 88.4582 20.4103V16.4103C87.5064 16.4103 86.5652 16.4571 85.6368 16.5486L86.0291 20.5293ZM88.4582 20.4103C101.3 20.4103 111.749 30.2973 112.461 42.6951L116.454 42.4658C115.618 27.9101 103.378 16.4103 88.4582 16.4103V20.4103ZM113.68 44.423C120.335 47.2321 125 53.8172 125 61.4872H129C129 52.153 123.32 44.1502 115.235 40.7379L113.68 44.423ZM125 61.4872C125 71.7115 116.712 80 106.487 80V84C118.921 84 129 73.9207 129 61.4872H125ZM106.487 80H22.5128V84H106.487V80ZM22.5128 80C12.2885 80 4 71.7115 4 61.4872H0C0 73.9207 10.0793 84 22.5128 84V80ZM4 61.4872C4 52.4001 10.5492 44.8384 19.1855 43.2722L18.4717 39.3364C7.96663 41.2415 0 50.4319 0 61.4872H4Z",
+    fill: "black",
+    mask: "url(#path-1-outside-1_5_28)"
   })), /*#__PURE__*/_react.default.createElement(_Timer.default, {
     seconds: seconds,
-    setSeconds: setSeconds
+    setSeconds: setSeconds,
+    start: start,
+    setStart: setStart,
+    initialTime: initialTime,
+    setInitialTime: setInitialTime
   }), /*#__PURE__*/_react.default.createElement(_Controls.default, {
     seconds: seconds,
     setSeconds: setSeconds,

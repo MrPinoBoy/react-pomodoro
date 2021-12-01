@@ -1,36 +1,11 @@
-@keyframes eclipse-1 {
-    0% {
-        transform: scaleX(100%);
-    }
-    100% {
-        transform: scaleX(00%);
-    }
-}
+@import url('https://fonts.googleapis.com/css2?family=Mali:wght@500&display=swap');
 
-@keyframes eclipse-2 {
+@keyframes nuage-move{
     0% {
-        transform: scaleX(0%);
+        transform: translateX(-10vw);
     }
     100% {
-        transform: scaleX(-100%);
-    }
-}
-
-@keyframes bgcolor {
-    0% {
-        background-position: left;
-    }
-    100% {
-        background-position: right;
-    }
-}
-
-@keyframes bgcolor2 {
-    100% {
-        background-position: left;
-    }
-    0% {
-        background-position: right;
+        transform: translateX(125vw);
     }
 }
 
@@ -58,207 +33,157 @@
     }
 }
 
-@keyframes moon-gone {
-    0% {
-        opacity: 100%;
-    }
-    100% {
-        opacity: 0%;
-    }
-}
 
-@keyframes moon2-gone {
-    0% {
-        opacity: 100%;
-        transform: scaleX(-100%) ;
-    }
-    100% {
-        opacity: 0%;
-        transform: scaleX(-100%) ;
-    }
+html {
+    margin: 0;
+    padding: 0;
 }
 
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-        "Helvetica Neue", sans-serif;
+    height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-image: linear-gradient(90deg, rgb(255, 190, 105) 0%, rgb(255, 239, 215) 35%, rgb(147, 203, 214) 75%, rgb(34, 34, 66) 100%);
+    background-size: 1000%;
+    background-position-x: 0%;
 }
 
 h2 {
     text-align: center;
+    margin-top: 0;
+}
+
+.timer {
+    font-family: 'Mali', serif;
+    font-size: 90px;
+    margin: 0 auto;
+}
+
+.cratere, .cratere-4 {
+    width: 50px;
+    height: 50px;
+    box-shadow: lightgrey 0px -3px 0px 2px, grey 0px 3px 0px 4px inset, lightgrey 0px -5px 0px 1px inset, grey 0px 7px 0px 2px;
+}
+
+.cratere, .cratere-2, .cratere-3, .cratere-4 {
+    background-color: darkgrey;
+    border-radius: 50px;
+    z-index: 1;
+    transform: rotate(289deg);
+    border: 2px solid black;
+    position: absolute;
 }
 
 .cratere {
-    width: 50px;
-    height: 50px;
-    background-color: darkgrey;
-    position: absolute;
-    box-shadow: lightgrey 0px -3px 0px 2px, grey 0px 3px 0px 4px inset, lightgrey 0px -5px 0px 1px inset, grey 0px 7px 0px 2px;
-    border-radius: 50px;
-    border: 2px solid black;
     top: 17%;
     right: 25%;
-    z-index: 3;
-    transform: rotate(
-289deg);
 }
 
 .cratere-2 {
     width: 25px;
     height: 25px;
-    background-color: darkgrey;
-    position: absolute;
     box-shadow: lightgrey 0px -1.5px 0px 1px, grey 0px 1.5px 0px 2px inset, lightgrey 0px -2.5px 0px 0.5px inset, grey 0px 3.5px 0px 1px;
-    border-radius: 50px;
-    border: 2px solid black;
     top: 30%;
     right: 19%;
-    z-index: 3;
-    transform: rotate(289deg);
 }
 
 .cratere-3 {
     width: 100px;
     height: 100px;
-    background-color: darkgrey;
-    position: absolute;
     box-shadow: lightgrey 0px -7px 0px -1px inset, grey 0px 2px 0px 7px inset, grey 0px 4px 0px 2px, lightgrey 0px -3px 0px 5px;    
-    border-radius: 50px;
-    border: 2px solid black;
     top: 62%;
     right: 25%;
-    z-index: 3;
-    transform: rotate( 
-289deg);
 }
 
 .cratere-4 {
-    width: 50px;
-    height: 50px;
-    background-color: darkgrey;
-    position: absolute;
-    box-shadow: lightgrey 0px -3px 0px 2px, grey 0px 3px 0px 4px inset, lightgrey 0px -5px 0px 1px inset, grey 0px 7px 0px 2px;
-    border-radius: 69px;
-    border: 2px solid black;
     top: 37%;
     right: 78%;
-    z-index: 1;
-    transform: rotate( 
-289deg);
 }
 
 .crateres div {
     transform: scale(0%);
 }
 
-.lune-2 {
-    position: absolute;
+
+.soleil, .soleil-2, .lune, .lune-2 {
     width: 100px;
     height: 200px;
-    background-color: darkgrey;
-    border-radius: 420px 0px 0px 420px;
-    /* transition: transform 2s; */
-    transform: scaleX(0%);
     transform-origin: right;
+    border-radius: 420px 0px 0px 420px;
     top: 0;
 }
 
 .lune {
     position: relative;
-    width: 100px;
-    height: 200px;
     background-color: darkgrey;
-    border-radius: 420px 0px 0px 420px;
-    transform-origin: right;
+}
+
+.lune-2 {
+    position: absolute;
+    background-color: darkgrey;
+    transform: scaleX(0%);
 }
 
 .soleil {
     position: absolute;
-    width: 100px;
-    height: 200px;
     background-color: orange;
-    border-radius: 420px 0px 0px 420px;
-    transform-origin: right;
-    top: 0;
     transform: scaleX(100%);
-    /* transition: transform 2s; */
 }
 
 .soleil-2 {
     position: absolute;
-    width: 100px;
-    height: 200px;
     background-color: orange;
-    border-radius: 420px 0px 0px 420px;
-    transform-origin: right;
     transform: rotateY(180deg);
-    top: 0;
     z-index: -1;
 }
 
 #app {
     position: relative;
-    width: 200px;
-    height: 200px;
+    width: 100%;
+    height: 100vh;
     margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
-/* change lune bg color to sun then hide it then show sun */
+
 .div {
     position: relative;
     border-radius: 420px;
     border: 2px solid;
     width: 200px;
+    margin: auto;
 }
 
-.nuage {
-    width: 150px;
-    height: 75px;
-    position: absolute;
-    top: 35%;
+.svg, .svg2, .svg3 {
     left: -25%;
+    opacity: 80%;
+    position: absolute;
+}
+
+.svg {
+    z-index: 3;
+    top: 35%;
+    animation: nuage-move 30s linear infinite;
+}
+
+.svg2 {
     z-index: 2;
+    top: 50%;
+    animation: nuage-move 20s 7s infinite linear;
 }
 
-.nuage * {
-    background: lightblue;
-    border-width: 2px !important;
+.svg3 {
+    z-index: -2;
+    top: 10%;
+    animation: nuage-move 25s 14s infinite linear;
 }
 
-.nuage-bas {
-    width: 100%;
-    height: 40px;
-    border-radius: 420px;
-    position: absolute;
-    bottom: 0;
-    border: 1px solid;
+svg:disabled {
+    pointer-events: none;
+    opacity: 0;
 }
-
-.nuage-haut {    
-    width: 50px;
-    height: 25px;
-    border-radius: 420px 420px 0 0;
-    position: absolute;
-    top: 8px;
-    left: 13%;
-    border-left: 1px solid;
-    border-top: 1px solid;
-    z-index: 2;
-}
-
-.nuage-haut2 {
-    width: 100px;
-    height: 50px;
-    border-radius: 420px 420px 000px 000px;
-    position: absolute;
-    top: -17px;
-    right: 12%;
-    border: 1px solid;
-    border-bottom: none;
-}
-
 .modal {
     width: 100px;
     height: 100px;
@@ -271,10 +196,11 @@ button {
     border: none;
 }
 
-body {
-    background-image: linear-gradient(90deg, rgb(255, 190, 105) 0%, rgb(255, 239, 215) 35%, rgb(147, 203, 214) 75%, rgb(34, 34, 66) 100%);
-    background-size: 1000%;
-    /* animation: bgcolor 5s infinite alternate; */
+.controls {
+    margin: auto;
+    display: flex;
+    width: 40%;
+    justify-content: space-between;
 }
 
 @media screen and (min-width:700px){
@@ -298,30 +224,7 @@ body {
         height: 400px;
     }
     
-    #app {
-        width: 400px;
-        height: 400px;
-    }
-    
     .div {
         width: 400px;
-    }
-    .nuage-bas {
-        width: 200%;
-        height: 80px;
-    }
-    
-    .nuage-haut {    
-        width: 100px;
-        height: 50px;
-        top: -53px;
-        left: 13%;
-    }
-    
-    .nuage-haut2 {
-        width: 200px;
-        height: 100px;
-        top: -109px;
-        right: -78%;
     }
 }

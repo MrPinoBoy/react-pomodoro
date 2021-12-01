@@ -18,11 +18,19 @@ const Modal = (props) => {
     const restart = () => {
         const inputEl = element.current
         inputEl.style.display = "none"
-        props.setStart("stop")
+        props.setStart("reset")
         props.setSeconds(props.initialTime)
         ResetCraters();
         setTimeout(() => ResetSunEclipse(),1000);
-        setTimeout(() => props.setStart("play"), 4000);
+        let id = setInterval(frame, 500)
+        function frame(){
+            let bgStyle = window.getComputedStyle(document.body);
+            let bgPos = bgStyle.backgroundPositionX;
+            if (bgPos === "0%") {
+                props.setStart("play")
+                clearInterval(id)
+            }
+        }
     }
     
     return (
