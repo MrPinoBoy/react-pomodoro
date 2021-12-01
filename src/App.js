@@ -8,20 +8,6 @@ const App = () => {
     const [seconds, setSeconds] = useState(10);
     const [start, setStart] = useState("start");
     const [initialTime, setInitialTime] = useState(seconds);
-    useEffect(()=>{
-        if(document.querySelector(".play")) {
-            //retourne ta condition
-        if(start !== "finished" || start !== "reset"){
-            document.querySelector(".play").style.pointerEvents = "all";
-            document.querySelector(".plus").style.pointerEvents = "all";
-            document.querySelector(".minus").style.pointerEvents = "all";
-        } else {
-            document.querySelector(".play").style.pointerEvents = "none";
-            document.querySelector(".plus").style.pointerEvents = "none";
-            document.querySelector(".minus").style.pointerEvents = "none";
-        }
-        }
-    },[start])
     
     return (
         <>

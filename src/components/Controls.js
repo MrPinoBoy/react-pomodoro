@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 
 export const ResetCraters = () => {
+
     document.querySelector(".crateres").querySelectorAll("div").forEach(
         e => e.style.transform = "scale(100%) rotate(289deg)"
     )
@@ -61,15 +62,9 @@ export const ResetSunEclipse = () => {
 
 const Controls = props => {
 
-    // useEffect(()=>{if(props.start === "finished"){
-    //     document.querySelector(".pause").style.pointerEvents = "none";
-    //     document.querySelector(".plus").style.pointerEvents = "none";
-    //     document.querySelector(".minus").style.pointerEvents = "none";
-    // }
-    // })
-
     
-
+    const showControls = props.start === "finished" ? "controls hide" : "controls show";
+    
     if(props.start === "play" && props.seconds <=1){
         document.querySelector(".crateres").querySelectorAll("div").forEach(
             e => e.style.transform = "scale(0%) rotate(289deg)"
@@ -144,14 +139,16 @@ const Controls = props => {
     
 
     return (
-        <div className={"controls"}>
+        <div className={showControls}>
             {props.start === "play" ?
                 <svg width="75" height="80" viewBox="0 0 70 80" fill="none" xmlns="http://www.w3.org/2000/svg"
                         id={"trigger"}
                         className={"play"}
-                        type={"button"}
-                        disabled={props.start === "reset" || props.start === "finished"}
-                        onClick={() => playPauseButton()
+                        onClick={() => {
+                            if(props.start !== "reset" && props.start !== "finished"){
+                            playPauseButton()
+                            }
+                        }
                         }>
                     <rect x="14.5" y="1.5" width="7" height="77" rx="3.5" fill="#FFA500" stroke="black" strokeWidth="2"/>
                     <rect x="44.5" y="1.5" width="7" height="77" rx="3.5" fill="#FFA500" stroke="black" strokeWidth="2"/>                
@@ -160,9 +157,11 @@ const Controls = props => {
                 <svg width="75" height="88" viewBox="0 0 75 88" fill="none" xmlns="http://www.w3.org/2000/svg"
                         id={"trigger"}
                         className={"pause"}
-                        type={"button"}
-                        disabled={props.start === "reset" || props.start === "finished"}
-                        onClick={() => playPauseButton()
+                        onClick={() => {
+                            if(props.start !== "reset" && props.start !== "finished"){
+                            playPauseButton()
+                            }
+                        }
                         }>
                             <path d="M67 43.4641L6.99997 78.1051C4.33331 79.6447 0.999969 77.7202 0.999969 74.641V5.35899C0.999969 2.27978 4.33331 0.355283 6.99997 1.89488L67 36.5359C69.6666 38.0755 69.6666 41.9245 67 43.4641Z" fill="#FFA500" stroke="black" strokeWidth="2"/>
                 </svg>
@@ -172,9 +171,10 @@ const Controls = props => {
                 disabled={props.start === "reset" || props.start === "play" || props.start === "finished"}
                 className={"plus"}
                 onClick={() => {
+                    if(props.start !== "reset" && props.start !== "finished"){
                     props.setStart("stop");
                     setTimeout(() => props.setSeconds(props.seconds + 10), 100);
-                }}
+                }}}
             >
                 <mask id="path-1-outside-1_7_11" maskUnits="userSpaceOnUse" x="0" y="0" width="80" height="80" fill="black">
                 <rect fill="white" width="80" height="80"/>
@@ -190,6 +190,7 @@ const Controls = props => {
                 disabled={props.start === "reset" || props.start === "play" || props.start === "finished" ||  props.seconds < 10}
                 className={"minus"}
                 onClick={() => {
+                    if(props.start !== "reset" && props.start !== "finished"){
                     props.setStart("stop");
                     if (props.seconds-10 > 10) {
                         setTimeout(
@@ -199,7 +200,7 @@ const Controls = props => {
                     } else {
                         setTimeout(() => props.setSeconds(10), 100);
                     }
-                }}>
+                }}}>
                 <rect x="1" y="44" width="7" height="78" rx="3.5" transform="rotate(-90 1 44)" fill="#FFA500" stroke="black" strokeWidth="2"/>
             </svg>
 
@@ -232,10 +233,6 @@ const Controls = props => {
                     }
                     }
                 }
-
-                    // document.querySelector(".pause").style.pointerEvents = "all";
-                    // document.querySelector(".plus").style.pointerEvents = "all";
-                    // document.querySelector(".minus").style.pointerEvents = "all";
                 }}>
                 <mask id="path-1-outside-1_8_31" maskUnits="userSpaceOnUse" x="-18.4374" y="-18.5108" width="125.158" height="125.158" fill="black">
                 <rect fill="white" x="-18.4374" y="-18.5108" width="125.158" height="125.158"/>
