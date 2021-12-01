@@ -2,10 +2,10 @@ import React,{useRef} from "react";
 import {ResetCraters, ResetSunEclipse} from "./Controls";
 const Modal = (props) => {
     
-    const showModal = props.start === "finished" ? "modal show" : "modal hide"
+    let showModal = props.start === "finished" ? "modal show" : "modal hide"
 
     const exit = () => {
-        props.setStart("start")
+        props.setStart("done")
     }
 
     const restart = () => {

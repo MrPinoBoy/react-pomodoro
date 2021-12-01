@@ -59,6 +59,8 @@ h2 {
     font-family: 'Mali', serif;
     font-size: 90px;
     margin: 0 auto;
+    pointer-events: none;
+    user-select: none;
 }
 
 .cratere, .cratere-4 {
@@ -150,11 +152,23 @@ h2 {
 }
 
 .div {
+    width: 100%;
+    position: relative;
+    margin: auto;
+}
+
+.astre {
     position: relative;
     border-radius: 420px;
     border: 2px solid;
-    width: 200px;
     margin: auto;
+}
+
+.cloud-box {
+    width: 100%;
+    height: 400px;
+    position: absolute;
+    top: 0;
 }
 
 .svg, .svg2, .svg3 {
@@ -165,30 +179,34 @@ h2 {
 
 .svg {
     z-index: 3;
-    top: 35%;
+    bottom: 35%;
     animation: nuage-move 30s linear infinite;
 }
 
 .svg2 {
     z-index: 2;
-    top: 50%;
-    animation: nuage-move 20s 7s infinite linear;
+    bottom: 10%;
+    animation: nuage-move 20s infinite linear;
 }
 
 .svg3 {
     z-index: -2;
-    top: 10%;
-    animation: nuage-move 25s 14s infinite linear;
+    bottom: 75%;
+    animation: nuage-move 25s infinite linear;
 }
 
-svg:disabled {
-    pointer-events: none;
-    opacity: 0;
+.controlsHover:hover, .modal svg:hover {
+    filter: brightness(115%);
+} 
+
+.controls svg, .modal svg {
+    cursor: pointer;
 }
 
 .modal {
     display: flex;
     width: 17%;
+    height: 10%;
     margin: auto;
     justify-content: space-between;
     align-items: center;
@@ -210,6 +228,17 @@ svg:disabled {
     margin: auto;
     width: 40%;
     justify-content: space-between;
+    height: 10%;
+}
+
+.controlsOff {
+    filter: brightness(70%);
+    cursor: default !important;
+}
+
+.reset {
+    transform: rotate(0deg);
+    transition: transform 1s;
 }
 
 @media screen and (min-width:700px){
@@ -233,7 +262,7 @@ svg:disabled {
         height: 400px;
     }
     
-    .div {
+    .astre {
         width: 400px;
     }
 }

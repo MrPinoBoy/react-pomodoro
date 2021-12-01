@@ -29764,6 +29764,10 @@ var Controls = function Controls(props) {
     }
   };
 
+  var buttonsStyle = props.start === "reset" ? "controlsOff" : "controlsHover";
+  var playStyle = props.start === "reset" || props.start === "done" ? "controlsOff" : "controlsHover";
+  var plusStyle = props.start === "play" || props.start === "reset" ? "controlsOff" : "controlsHover";
+  var minusStyle = props.start === "play" || props.start === "reset" || props.start === "done" ? "controlsOff" : "controlsHover";
   return /*#__PURE__*/_react.default.createElement("div", {
     className: showControls
   }, props.start === "play" ? /*#__PURE__*/_react.default.createElement("svg", {
@@ -29773,9 +29777,9 @@ var Controls = function Controls(props) {
     fill: "none",
     xmlns: "http://www.w3.org/2000/svg",
     id: "trigger",
-    className: "play",
+    className: "pause",
     onClick: function onClick() {
-      if (props.start !== "reset" && props.start !== "finished") {
+      if (props.start !== "reset") {
         playPauseButton();
       }
     }
@@ -29804,9 +29808,9 @@ var Controls = function Controls(props) {
     fill: "none",
     xmlns: "http://www.w3.org/2000/svg",
     id: "trigger",
-    className: "pause",
+    className: "".concat(playStyle),
     onClick: function onClick() {
-      if (props.start !== "reset" && props.start !== "finished") {
+      if (props.start !== "reset" && props.start !== "finished" && props.start !== "done") {
         playPauseButton();
       }
     }
@@ -29821,14 +29825,41 @@ var Controls = function Controls(props) {
     viewBox: "0 0 88 88",
     fill: "none",
     xmlns: "http://www.w3.org/2000/svg",
-    disabled: props.start === "reset" || props.start === "play" || props.start === "finished",
-    className: "plus",
+    className: "".concat(plusStyle),
     onClick: function onClick() {
-      if (props.start !== "reset" && props.start !== "finished") {
-        props.setStart("stop");
+      if (props.start !== "reset" && props.start !== "finished" && props.start !== "play") {
         setTimeout(function () {
           return props.setSeconds(props.seconds + 10);
         }, 100);
+
+        if (props.start !== "start") {
+          if (props.seconds > 1 || props.seconds === 0) {
+            props.setStart("reset");
+
+            if (props.start === "done") {
+              props.setStart("reset");
+              ResetCraters();
+              setTimeout(function () {
+                return ResetSunEclipse();
+              }, 1000);
+            } else {
+              props.setStart("reset");
+              ResetSunEclipse();
+            }
+
+            var id = setInterval(frame, 500);
+
+            function frame() {
+              var bgStyle = window.getComputedStyle(document.body);
+              var bgPos = bgStyle.backgroundPositionX;
+
+              if (bgPos === "0%") {
+                props.setStart("start");
+                clearInterval(id);
+              }
+            }
+          }
+        }
       }
     }
   }, /*#__PURE__*/_react.default.createElement("mask", {
@@ -29862,11 +29893,12 @@ var Controls = function Controls(props) {
     viewBox: "0 0 88 88",
     fill: "none",
     xmlns: "http://www.w3.org/2000/svg",
-    disabled: props.start === "reset" || props.start === "play" || props.start === "finished" || props.seconds < 10,
-    className: "minus",
+    className: "".concat(minusStyle),
     onClick: function onClick() {
-      if (props.start !== "reset" && props.start !== "finished") {
-        props.setStart("stop");
+      if (props.start === "start" || props.start === "pause" || props.start === "stop") {
+        if (props.start !== "start") {
+          props.setStart("stop");
+        }
 
         if (props.seconds - 10 > 10) {
           setTimeout(function () {
@@ -29895,13 +29927,23 @@ var Controls = function Controls(props) {
     viewBox: "0 0 85 85",
     fill: "none",
     xmlns: "http://www.w3.org/2000/svg",
-    className: "reset",
+    className: "".concat(buttonsStyle, " reset"),
     onClick: function onClick() {
       if (props.start !== "start") {
         if (props.seconds > 1 || props.seconds === 0) {
+          document.querySelector(".reset").style.transform = "rotate(360deg)";
+          setTimeout(function () {
+            document.querySelector(".reset").style.transition = "none";
+          }, 1000);
+          setTimeout(function () {
+            document.querySelector(".reset").style.transform = "rotate(0deg)";
+          }, 1100);
+          setTimeout(function () {
+            document.querySelector(".reset").style.transition = "transform 1s";
+          }, 1200);
           props.setStart("reset");
 
-          if (props.seconds === 0) {
+          if (props.start === "finished" || props.start === "done") {
             props.setStart("reset");
             ResetCraters();
             setTimeout(function () {
@@ -29981,7 +30023,7 @@ var Modal = function Modal(props) {
   var showModal = props.start === "finished" ? "modal show" : "modal hide";
 
   var exit = function exit() {
-    props.setStart("start");
+    props.setStart("done");
   };
 
   var restart = function restart() {
@@ -30210,10 +30252,27 @@ var App = function App() {
   var _useState5 = (0, _react.useState)(seconds),
       _useState6 = _slicedToArray(_useState5, 2),
       initialTime = _useState6[0],
-      setInitialTime = _useState6[1];
+      setInitialTime = _useState6[1]; //this is supposed to change the y-position of the clouds when they restart their animation but intervals bug out when components refresh
+  // useEffect(() => {
+  //     setInterval(() => {
+  //         let nuage1Pos = Math.ceil(Math.random()*80)+20;
+  //         document.querySelector(".svg").style.bottom = nuage1Pos + "%"
+  //     }, 30000);
+  //     setInterval(() => {
+  //         let nuage2Pos = Math.ceil(Math.random()*80)+20;
+  //         document.querySelector(".svg2").style.bottom = nuage2Pos + "%"
+  //     }, 20000);
+  //     setInterval(() => {
+  //         let nuage3Pos = Math.ceil(Math.random()*80)+20;
+  //         document.querySelector(".svg3").style.bottom = nuage3Pos + "%"
+  //     }, 25000);
+  // })
+
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("div", {
     className: "div"
+  }, /*#__PURE__*/_react.default.createElement("div", {
+    className: "astre"
   }, /*#__PURE__*/_react.default.createElement("div", {
     className: "crateres"
   }, /*#__PURE__*/_react.default.createElement("div", {
@@ -30234,7 +30293,9 @@ var App = function App() {
     id: "soleil"
   }), /*#__PURE__*/_react.default.createElement("div", {
     className: "soleil-2"
-  })), /*#__PURE__*/_react.default.createElement("svg", {
+  })), /*#__PURE__*/_react.default.createElement("div", {
+    className: "cloud-box"
+  }, /*#__PURE__*/_react.default.createElement("svg", {
     width: "304",
     height: "184",
     viewBox: "0 0 152 92",
@@ -30333,7 +30394,7 @@ var App = function App() {
     d: "M18.8286 41.3043L19.1855 43.2722L20.9945 42.9441L20.8195 41.114L18.8286 41.3043ZM85.8329 18.5389L84.1573 19.6308L84.8204 20.6484L86.0291 20.5293L85.8329 18.5389ZM114.458 42.5805L112.461 42.6951L112.532 43.9387L113.68 44.423L114.458 42.5805ZM20.8195 41.114C20.7184 40.0557 20.6666 38.9828 20.6666 37.8974H16.6666C16.6666 39.1101 16.7244 40.3101 16.8377 41.4947L20.8195 41.114ZM20.6666 37.8974C20.6666 19.2055 36.0647 4 55.1249 4V0C33.9143 0 16.6666 16.9381 16.6666 37.8974H20.6666ZM55.1249 4C67.3244 4 78.0339 10.2335 84.1573 19.6308L87.5086 17.4471C80.6681 6.94929 68.7151 0 55.1249 0V4ZM86.0291 20.5293C86.8274 20.4506 87.6377 20.4103 88.4582 20.4103V16.4103C87.5064 16.4103 86.5652 16.4571 85.6368 16.5486L86.0291 20.5293ZM88.4582 20.4103C101.3 20.4103 111.749 30.2973 112.461 42.6951L116.454 42.4658C115.618 27.9101 103.378 16.4103 88.4582 16.4103V20.4103ZM113.68 44.423C120.335 47.2321 125 53.8172 125 61.4872H129C129 52.153 123.32 44.1502 115.235 40.7379L113.68 44.423ZM125 61.4872C125 71.7115 116.712 80 106.487 80V84C118.921 84 129 73.9207 129 61.4872H125ZM106.487 80H22.5128V84H106.487V80ZM22.5128 80C12.2885 80 4 71.7115 4 61.4872H0C0 73.9207 10.0793 84 22.5128 84V80ZM4 61.4872C4 52.4001 10.5492 44.8384 19.1855 43.2722L18.4717 39.3364C7.96663 41.2415 0 50.4319 0 61.4872H4Z",
     fill: "black",
     mask: "url(#path-1-outside-1_5_28)"
-  })), /*#__PURE__*/_react.default.createElement(_Timer.default, {
+  })))), /*#__PURE__*/_react.default.createElement(_Timer.default, {
     seconds: seconds,
     setSeconds: setSeconds,
     start: start,

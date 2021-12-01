@@ -136,17 +136,21 @@ const Controls = props => {
     }
 }
 
-    
+
+    let buttonsStyle = props.start === "reset" ? "controlsOff" : "controlsHover";
+    let playStyle = (props.start === "reset" || props.start === "done") ? "controlsOff" : "controlsHover";
+    let plusStyle = (props.start === "play" || props.start === "reset") ? "controlsOff" : "controlsHover";
+    let minusStyle = (props.start === "play" || props.start === "reset" || props.start === "done") ? "controlsOff" : "controlsHover";
 
     return (
         <div className={showControls}>
             {props.start === "play" ?
                 <svg width="75" height="80" viewBox="0 0 70 80" fill="none" xmlns="http://www.w3.org/2000/svg"
                         id={"trigger"}
-                        className={"play"}
+                        className={`pause`}
                         onClick={() => {
-                            if(props.start !== "reset" && props.start !== "finished"){
-                            playPauseButton()
+                            if(props.start !== "reset"){
+                                playPauseButton()
                             }
                         }
                         }>
@@ -156,10 +160,10 @@ const Controls = props => {
                 : 
                 <svg width="75" height="88" viewBox="0 0 75 88" fill="none" xmlns="http://www.w3.org/2000/svg"
                         id={"trigger"}
-                        className={"pause"}
+                        className={`${playStyle}`}
                         onClick={() => {
-                            if(props.start !== "reset" && props.start !== "finished"){
-                            playPauseButton()
+                            if(props.start !== "reset" && props.start !== "finished" && props.start !== "done"){
+                                playPauseButton()
                             }
                         }
                         }>
@@ -168,12 +172,32 @@ const Controls = props => {
                 }
 
             <svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg"
-                disabled={props.start === "reset" || props.start === "play" || props.start === "finished"}
-                className={"plus"}
+                className={`${plusStyle}`}
                 onClick={() => {
-                    if(props.start !== "reset" && props.start !== "finished"){
-                    props.setStart("stop");
+                    if(props.start !== "reset" && props.start !== "finished" && props.start !== "play"){
                     setTimeout(() => props.setSeconds(props.seconds + 10), 100);
+                    if(props.start !== "start"){
+                        if(props.seconds > 1 || props.seconds === 0) {
+                        props.setStart("reset");
+                        if(props.start === "done"){
+                            props.setStart("reset");
+                            ResetCraters();
+                            setTimeout(() => ResetSunEclipse(),1000);
+                        }else {
+                            props.setStart("reset");
+                            ResetSunEclipse();
+                        }
+                        let id = setInterval(frame, 500)
+                        function frame(){
+                            let bgStyle = window.getComputedStyle(document.body);
+                            let bgPos = bgStyle.backgroundPositionX;
+                            if (bgPos === "0%") {
+                                props.setStart("start")
+                                clearInterval(id)
+                            }
+                        }
+                        }
+                    }
                 }}}
             >
                 <mask id="path-1-outside-1_7_11" maskUnits="userSpaceOnUse" x="0" y="0" width="80" height="80" fill="black">
@@ -187,11 +211,12 @@ const Controls = props => {
 
             
             <svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg"
-                disabled={props.start === "reset" || props.start === "play" || props.start === "finished" ||  props.seconds < 10}
-                className={"minus"}
+                className={`${minusStyle}`}
                 onClick={() => {
-                    if(props.start !== "reset" && props.start !== "finished"){
-                    props.setStart("stop");
+                    if(props.start === "start" || props.start === "pause" || props.start === "stop"){
+                        if(props.start !== "start"){
+                            props.setStart("stop");
+                        }
                     if (props.seconds-10 > 10) {
                         setTimeout(
                             () => props.setSeconds(props.seconds - 10),
@@ -208,12 +233,22 @@ const Controls = props => {
 
 
             <svg width="85" height="85" viewBox="0 0 85 85" fill="none" xmlns="http://www.w3.org/2000/svg"
-                className={"reset"}
+                className={`${buttonsStyle} reset`}
                 onClick={() => {
                     if(props.start !== "start"){
                     if(props.seconds > 1 || props.seconds === 0) {
+                        document.querySelector(".reset").style.transform = "rotate(360deg)"
+                        setTimeout(()=>{
+                            document.querySelector(".reset").style.transition = "none"
+                        },1000)
+                        setTimeout(() => {
+                            document.querySelector(".reset").style.transform = "rotate(0deg)"
+                        },1100)
+                        setTimeout(()=> {
+                            document.querySelector(".reset").style.transition = "transform 1s"
+                        },1200)
                     props.setStart("reset");
-                    if(props.seconds === 0){
+                    if(props.start === "finished" || props.start === "done"){
                         props.setStart("reset");
                         ResetCraters();
                         setTimeout(() => ResetSunEclipse(),1000);
