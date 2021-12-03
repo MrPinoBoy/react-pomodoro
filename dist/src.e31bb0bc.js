@@ -30408,7 +30408,9 @@ var App = function App() {
     setStart: setStart,
     initialTime: initialTime,
     setInitialTime: setInitialTime
-  }), /*#__PURE__*/_react.default.createElement(_Controls.default, {
+  }), /*#__PURE__*/_react.default.createElement("div", {
+    className: "controls-container"
+  }, /*#__PURE__*/_react.default.createElement(_Controls.default, {
     seconds: seconds,
     setSeconds: setSeconds,
     start: start,
@@ -30421,7 +30423,7 @@ var App = function App() {
     initialTime: initialTime,
     start: start,
     setStart: setStart
-  }));
+  })));
 };
 
 var _default = App;

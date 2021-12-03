@@ -87,23 +87,23 @@ const App = () => {
                 initialTime={initialTime}
                 setInitialTime={setInitialTime}
             />
-            {/* <div className="test"> */}
-            <Controls
-                seconds={seconds}
-                setSeconds={setSeconds}
-                start={start}
-                setStart={setStart}
-                initialTime={initialTime}
-                setInitialTime={setInitialTime}
-            />
-            <Modal
-                seconds={seconds}
-                setSeconds={setSeconds}
-                initialTime={initialTime}
-                start={start}
-                setStart={setStart}
-            />
-            {/* </div> */}
+            <div className="controls-container">
+                <Controls
+                    seconds={seconds}
+                    setSeconds={setSeconds}
+                    start={start}
+                    setStart={setStart}
+                    initialTime={initialTime}
+                    setInitialTime={setInitialTime}
+                />
+                <Modal
+                    seconds={seconds}
+                    setSeconds={setSeconds}
+                    initialTime={initialTime}
+                    start={start}
+                    setStart={setStart}
+                />
+            </div>
         </>
     );
 };
