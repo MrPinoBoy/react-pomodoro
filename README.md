@@ -1,6 +1,8 @@
 # React Pomodoro Timer
 ---
+
 !!! This is NOT working in Safari because of the way it deals with % values !!!
+
 ---
 App link: [Click here](https://gifted-almeida-98e7ae.netlify.app/)
 
