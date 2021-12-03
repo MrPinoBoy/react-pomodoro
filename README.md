@@ -1,7 +1,5 @@
 # React Pomodoro Timer
 
-### *THIS IS A WIP*
----
 App link: [Click here](https://gifted-almeida-98e7ae.netlify.app/)
 
 ![App Screenshot](/assets/image/pomodoro.PNG)
@@ -22,25 +20,25 @@ Since this is my second react project, it's probably filled with flaws. It was b
 
 ## Struggles
 
-UseRefs are a bit obscure to me still, that's why there's a lot of querySelectors in the code still. 
+UseRefs are a bit obscure to me still, that's why there's a lot of querySelectors in the code. 
 
 Timing and resetting the animations was and is still complicated, it's far from perfect and maybe I'll find a solution later on that will make it all very simple.
 
 ## To-do list
 
 - Replace querySelectors by useRefs
-- Refactor animation related functions
-- Rethink the +, - and reset buttons functionalities
-- Finish modal screen functionnalities 
-- Style the buttons and the modal screen
+~~- Refactor animation related functions~~
+~~- Rethink the +, - and reset buttons functionalities~~
+~~- Finish modal screen functionnalities ~~
+~~- Style the buttons and the modal screen~~
 - Maybe add sounds?
-- Pretty up the code
+- Pretty up the code (done-ish)
 
 ## Conclusion
 
-Even though it is not finished, I'm pretty proud of this project. The react app is working really well, it is just the styling that still has bugs and problems, since it is a bit complicated. 
+~~Even though it is not finished, I'm pretty proud of this project. The react app is working really well, it is just the styling that still has bugs and problems, since it is a bit complicated. ~~
 
-I really enjoy working in react, it is really powerful and fun, and even though I don't get the logic behind it 100% yet, I feel like the learning curve isn't steep at all.
+I really enjoy working in react, it is really powerful and fun, I feel like the learning curve isn't steep at all.
 
 
 Thanks for checking out this project ! 
