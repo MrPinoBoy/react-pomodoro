@@ -36,7 +36,7 @@ Timing and resetting the animations was and is still complicated, it's far from 
 
 ## Conclusion
 
-~~Even though it is not finished, I'm pretty proud of this project. The react app is working really well, it is just the styling that still has bugs and problems, since it is a bit complicated. ~~
+~~Even though it is not finished, I'm pretty proud of this project. The react app is working really well, it is just the styling that still has bugs and problems, since it is a bit complicated.~~
 
 I really enjoy working in react, it is really powerful and fun, I feel like the learning curve isn't steep at all.
 
