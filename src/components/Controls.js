@@ -137,7 +137,7 @@ const Controls = props => {
 }
 
     document.addEventListener("visibilitychange", () => {
-        if(document.hidden){
+        if(document.hidden && props.start === "play"){
             playPauseButton()
         }
     })

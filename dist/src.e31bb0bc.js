@@ -29765,7 +29765,7 @@ var Controls = function Controls(props) {
   };
 
   document.addEventListener("visibilitychange", function () {
-    if (document.hidden) {
+    if (document.hidden && props.start === "play") {
       playPauseButton();
     }
   });
@@ -30468,7 +30468,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53112" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64603" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
