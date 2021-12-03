@@ -29,7 +29,7 @@ Timing and resetting the animations was and is still complicated, it's far from 
 - Replace querySelectors by useRefs
 - ~~Refactor animation related functions~~
 - ~~Rethink the +, - and reset buttons functionalities~~
-- ~~Finish modal screen functionnalities ~~
+- ~~Finish modal screen functionnalities~~
 - ~~Style the buttons and the modal screen~~
 - Maybe add sounds?
 - Pretty up the code (done-ish)
