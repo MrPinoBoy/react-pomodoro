@@ -29764,6 +29764,11 @@ var Controls = function Controls(props) {
     }
   };
 
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+      playPauseButton();
+    }
+  });
   var buttonsStyle = props.start === "reset" ? "controlsOff" : "controlsHover";
   var playStyle = props.start === "reset" || props.start === "done" ? "controlsOff" : "controlsHover";
   var plusStyle = props.start === "play" || props.start === "reset" ? "controlsOff" : "controlsHover";
@@ -29772,7 +29777,7 @@ var Controls = function Controls(props) {
     className: showControls
   }, props.start === "play" ? /*#__PURE__*/_react.default.createElement("svg", {
     width: "75",
-    height: "80",
+    height: "88",
     viewBox: "0 0 70 80",
     fill: "none",
     xmlns: "http://www.w3.org/2000/svg",
@@ -29804,7 +29809,7 @@ var Controls = function Controls(props) {
   })) : /*#__PURE__*/_react.default.createElement("svg", {
     width: "75",
     height: "88",
-    viewBox: "0 0 75 88",
+    viewBox: "0 0 65 88",
     fill: "none",
     xmlns: "http://www.w3.org/2000/svg",
     id: "trigger",
@@ -29815,14 +29820,48 @@ var Controls = function Controls(props) {
       }
     }
   }, /*#__PURE__*/_react.default.createElement("path", {
-    d: "M67 43.4641L6.99997 78.1051C4.33331 79.6447 0.999969 77.7202 0.999969 74.641V5.35899C0.999969 2.27978 4.33331 0.355283 6.99997 1.89488L67 36.5359C69.6666 38.0755 69.6666 41.9245 67 43.4641Z",
+    d: "M67.1429 44.4501L7.02406 79.7198C4.35748 81.2842 1 79.3613 1 76.2697V5.73027C1 2.63869 4.35749 0.715781 7.02406 2.28017L67.1429 37.5499C69.7775 39.0955 69.7775 42.9045 67.1429 44.4501Z",
     fill: "#FFA500",
     stroke: "black",
     strokeWidth: "2"
   })), /*#__PURE__*/_react.default.createElement("svg", {
     width: "88",
     height: "88",
-    viewBox: "0 0 88 88",
+    viewBox: "0 0 78 88",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg",
+    className: "".concat(minusStyle),
+    onClick: function onClick() {
+      if (props.start === "start" || props.start === "pause" || props.start === "stop") {
+        if (props.start !== "start") {
+          props.setStart("stop");
+        }
+
+        if (props.seconds - 10 > 10) {
+          setTimeout(function () {
+            return props.setSeconds(props.seconds - 10);
+          }, 100);
+        } else {
+          setTimeout(function () {
+            return props.setSeconds(10);
+          }, 100);
+        }
+      }
+    }
+  }, /*#__PURE__*/_react.default.createElement("rect", {
+    x: "1",
+    y: "44",
+    width: "7",
+    height: "78",
+    rx: "3.5",
+    transform: "rotate(-90 1 44)",
+    fill: "#FFA500",
+    stroke: "black",
+    strokeWidth: "2"
+  })), /*#__PURE__*/_react.default.createElement("svg", {
+    width: "88",
+    height: "88",
+    viewBox: "0 0 78 88",
     fill: "none",
     xmlns: "http://www.w3.org/2000/svg",
     className: "".concat(plusStyle),
@@ -29887,40 +29926,6 @@ var Controls = function Controls(props) {
     d: "M38.1463 38.1463V40.1463H40.1463V38.1463H38.1463ZM38.1463 42.7805H40.1463V40.7805H38.1463V42.7805ZM42.7805 42.7805V40.7805H40.7805V42.7805H42.7805ZM42.7805 38.1463H40.7805V40.1463H42.7805V38.1463ZM40.1463 4.31707C40.1463 4.14196 40.2883 4 40.4634 4V0C38.0791 0 36.1463 1.93282 36.1463 4.31707H40.1463ZM40.1463 38.1463V4.31707H36.1463V38.1463H40.1463ZM4.31707 40.1463H38.1463V36.1463H4.31707V40.1463ZM4 40.4634C4 40.2883 4.14196 40.1463 4.31707 40.1463V36.1463C1.93282 36.1463 0 38.0791 0 40.4634H4ZM4.31707 40.7805C4.14196 40.7805 4 40.6385 4 40.4634H0C0 42.8476 1.93282 44.7805 4.31707 44.7805V40.7805ZM38.1463 40.7805H4.31707V44.7805H38.1463V40.7805ZM40.1463 75.6829V42.7805H36.1463V75.6829H40.1463ZM40.4634 76C40.2883 76 40.1463 75.858 40.1463 75.6829H36.1463C36.1463 78.0672 38.0791 80 40.4634 80V76ZM40.7805 75.6829C40.7805 75.858 40.6385 76 40.4634 76V80C42.8476 80 44.7805 78.0672 44.7805 75.6829H40.7805ZM40.7805 42.7805V75.6829H44.7805V42.7805H40.7805ZM75.6829 40.7805H42.7805V44.7805H75.6829V40.7805ZM76 40.4634C76 40.6385 75.858 40.7805 75.6829 40.7805V44.7805C78.0672 44.7805 80 42.8476 80 40.4634H76ZM75.6829 40.1463C75.858 40.1463 76 40.2883 76 40.4634H80C80 38.0791 78.0672 36.1463 75.6829 36.1463V40.1463ZM42.7805 40.1463H75.6829V36.1463H42.7805V40.1463ZM40.7805 4.31707V38.1463H44.7805V4.31707H40.7805ZM40.4634 4C40.6385 4 40.7805 4.14196 40.7805 4.31707H44.7805C44.7805 1.93282 42.8476 0 40.4634 0V4Z",
     fill: "black",
     mask: "url(#path-1-outside-1_7_11)"
-  })), /*#__PURE__*/_react.default.createElement("svg", {
-    width: "88",
-    height: "88",
-    viewBox: "0 0 88 88",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg",
-    className: "".concat(minusStyle),
-    onClick: function onClick() {
-      if (props.start === "start" || props.start === "pause" || props.start === "stop") {
-        if (props.start !== "start") {
-          props.setStart("stop");
-        }
-
-        if (props.seconds - 10 > 10) {
-          setTimeout(function () {
-            return props.setSeconds(props.seconds - 10);
-          }, 100);
-        } else {
-          setTimeout(function () {
-            return props.setSeconds(10);
-          }, 100);
-        }
-      }
-    }
-  }, /*#__PURE__*/_react.default.createElement("rect", {
-    x: "1",
-    y: "44",
-    width: "7",
-    height: "78",
-    rx: "3.5",
-    transform: "rotate(-90 1 44)",
-    fill: "#FFA500",
-    stroke: "black",
-    strokeWidth: "2"
   })), /*#__PURE__*/_react.default.createElement("svg", {
     width: "85",
     height: "85",
@@ -30084,8 +30089,8 @@ var Modal = function Modal(props) {
     fill: "black",
     mask: "url(#path-2)"
   })), /*#__PURE__*/_react.default.createElement("svg", {
-    width: "118",
-    height: "118",
+    width: "88",
+    height: "88",
     viewBox: "0 0 118 118",
     fill: "none",
     xmlns: "http://www.w3.org/2000/svg",
@@ -30298,7 +30303,7 @@ var App = function App() {
   }, /*#__PURE__*/_react.default.createElement("svg", {
     width: "304",
     height: "184",
-    viewBox: "0 0 152 92",
+    viewBox: "0 0 304 184",
     fill: "none",
     xmlns: "http://www.w3.org/2000/svg",
     className: "svg"
@@ -30307,29 +30312,31 @@ var App = function App() {
     maskUnits: "userSpaceOnUse",
     x: "0",
     y: "0",
-    width: "152",
-    height: "92",
+    width: "304",
+    height: "184",
     fill: "black"
   }, /*#__PURE__*/_react.default.createElement("rect", {
     fill: "white",
-    width: "152",
-    height: "92"
+    width: "304",
+    height: "184"
   }), /*#__PURE__*/_react.default.createElement("path", {
     fillRule: "evenodd",
     clipRule: "evenodd",
-    d: "M134 51C134 51.0746 134 51.1491 134 51.2234C143.622 52.6707 151 60.9738 151 71C151 82.0457 142.046 91 131 91H21C9.9543 91 1 82.0457 1 71C1 61.3217 7.8746 53.249 17.0071 51.3986C17.3114 38.5095 27.3705 28.0346 40.0864 27.0721C48.5688 11.5378 65.0538 1 84 1C111.614 1 134 23.3858 134 51Z"
+    d: "M268 102C268 102.149 268 102.298 267.999 102.447C287.245 105.341 302 121.948 302 142C302 164.091 284.091 182 262 182H42C19.9086 182 2 164.091 2 142C2 122.643 15.7492 106.498 34.0142 102.797C34.6227 77.0191 54.7411 56.0693 80.1728 54.1443C97.1375 23.0757 130.108 2 168 2C223.228 2 268 46.7715 268 102Z"
   })), /*#__PURE__*/_react.default.createElement("path", {
     fillRule: "evenodd",
     clipRule: "evenodd",
-    d: "M134 51C134 51.0746 134 51.1491 134 51.2234C143.622 52.6707 151 60.9738 151 71C151 82.0457 142.046 91 131 91H21C9.9543 91 1 82.0457 1 71C1 61.3217 7.8746 53.249 17.0071 51.3986C17.3114 38.5095 27.3705 28.0346 40.0864 27.0721C48.5688 11.5378 65.0538 1 84 1C111.614 1 134 23.3858 134 51Z",
+    d: "M268 102C268 102.149 268 102.298 267.999 102.447C287.245 105.341 302 121.948 302 142C302 164.091 284.091 182 262 182H42C19.9086 182 2 164.091 2 142C2 122.643 15.7492 106.498 34.0142 102.797C34.6227 77.0191 54.7411 56.0693 80.1728 54.1443C97.1375 23.0757 130.108 2 168 2C223.228 2 268 46.7715 268 102Z",
     fill: "#ADD8E6"
   }), /*#__PURE__*/_react.default.createElement("path", {
-    d: "M134 51.2234L133 51.2191L132.996 52.0837L133.851 52.2123L134 51.2234ZM17.0071 51.3986L17.2057 52.3787L17.988 52.2202L18.0068 51.4222L17.0071 51.3986ZM40.0864 27.0721L40.1619 28.0693L40.7037 28.0283L40.9641 27.5514L40.0864 27.0721ZM135 51.2277C135 51.152 135 51.0761 135 51H133C133 51.0731 133 51.1462 133 51.2191L135 51.2277ZM152 71C152 60.4715 144.253 51.7543 134.148 50.2345L133.851 52.2123C142.992 53.5871 150 61.476 150 71H152ZM131 92C142.598 92 152 82.598 152 71H150C150 81.4934 141.493 90 131 90V92ZM21 92H131V90H21V92ZM0 71C0 82.598 9.40202 92 21 92V90C10.5066 90 2 81.4934 2 71H0ZM16.8085 50.4186C7.21897 52.3615 0 60.8366 0 71H2C2 61.8067 8.53022 54.1365 17.2057 52.3787L16.8085 50.4186ZM18.0068 51.4222C18.2989 39.0496 27.9558 28.9932 40.1619 28.0693L40.0109 26.075C26.7853 27.0761 16.3238 37.9694 16.0074 51.375L18.0068 51.4222ZM84 0C64.6735 0 47.8593 10.7505 39.2087 26.5929L40.9641 27.5514C49.2782 12.3252 65.434 2 84 2V0ZM135 51C135 22.8335 112.167 0 84 0V2C111.062 2 133 23.938 133 51H135Z",
+    d: "M267.999 102.447L265.999 102.438L265.992 104.167L267.702 104.425L267.999 102.447ZM34.0142 102.797L34.4113 104.757L35.976 104.44L36.0136 102.844L34.0142 102.797ZM80.1728 54.1443L80.3238 56.1386L81.4074 56.0566L81.9282 55.1028L80.1728 54.1443ZM269.999 102.455C270 102.304 270 102.152 270 102H266C266 102.146 266 102.292 265.999 102.438L269.999 102.455ZM304 142C304 120.943 288.506 103.509 268.296 100.469L267.702 104.425C285.983 107.174 300 122.952 300 142H304ZM262 184C285.196 184 304 165.196 304 142H300C300 162.987 282.987 180 262 180V184ZM42 184H262V180H42V184ZM0 142C0 165.196 18.804 184 42 184V180C21.0132 180 4 162.987 4 142H0ZM33.617 100.837C14.4379 104.723 0 121.673 0 142H4C4 123.613 17.0604 108.273 34.4113 104.757L33.617 100.837ZM36.0136 102.844C36.5978 78.0993 55.9116 57.9864 80.3238 56.1386L80.0219 52.15C53.5706 54.1521 32.6477 75.9389 32.0147 102.75L36.0136 102.844ZM168 0C129.347 0 95.7187 21.501 78.4175 53.1858L81.9282 55.1028C98.5564 24.6504 130.868 4 168 4V0ZM270 102C270 45.667 224.333 0 168 0V4C222.124 4 266 47.8761 266 102H270Z",
     fill: "black",
     mask: "url(#path-1-outside-1_3_19)"
   }), /*#__PURE__*/_react.default.createElement("path", {
-    d: "M66 52C66 38.1929 54.8071 27 41 27C27.1929 27 16 38.1929 16 52",
-    stroke: "black"
+    fillRule: "evenodd",
+    clipRule: "evenodd",
+    d: "M71 55.6721C75.1447 54.5816 79.5026 54 84 54C111.633 54 134 75.9566 134 103H136C136 74.8149 112.7 52 84 52C79.5118 52 75.1556 52.558 71 53.6072V55.6721Z",
+    fill: "black"
   })), /*#__PURE__*/_react.default.createElement("svg", {
     width: "94",
     height: "58",
@@ -30459,7 +30466,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60198" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53112" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

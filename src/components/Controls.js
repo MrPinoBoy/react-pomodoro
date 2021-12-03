@@ -136,6 +136,12 @@ const Controls = props => {
     }
 }
 
+    document.addEventListener("visibilitychange", () => {
+        if(document.hidden){
+            playPauseButton()
+        }
+    })
+
 
     let buttonsStyle = props.start === "reset" ? "controlsOff" : "controlsHover";
     let playStyle = (props.start === "reset" || props.start === "done") ? "controlsOff" : "controlsHover";
@@ -145,7 +151,7 @@ const Controls = props => {
     return (
         <div className={showControls}>
             {props.start === "play" ?
-                <svg width="75" height="80" viewBox="0 0 70 80" fill="none" xmlns="http://www.w3.org/2000/svg"
+                <svg width="75" height="88" viewBox="0 0 70 80" fill="none" xmlns="http://www.w3.org/2000/svg"
                         id={"trigger"}
                         className={`pause`}
                         onClick={() => {
@@ -158,7 +164,7 @@ const Controls = props => {
                     <rect x="44.5" y="1.5" width="7" height="77" rx="3.5" fill="#FFA500" stroke="black" strokeWidth="2"/>                
                 </svg>
                 : 
-                <svg width="75" height="88" viewBox="0 0 75 88" fill="none" xmlns="http://www.w3.org/2000/svg"
+                <svg width="75" height="88" viewBox="0 0 65 88" fill="none" xmlns="http://www.w3.org/2000/svg"
                         id={"trigger"}
                         className={`${playStyle}`}
                         onClick={() => {
@@ -167,11 +173,30 @@ const Controls = props => {
                             }
                         }
                         }>
-                            <path d="M67 43.4641L6.99997 78.1051C4.33331 79.6447 0.999969 77.7202 0.999969 74.641V5.35899C0.999969 2.27978 4.33331 0.355283 6.99997 1.89488L67 36.5359C69.6666 38.0755 69.6666 41.9245 67 43.4641Z" fill="#FFA500" stroke="black" strokeWidth="2"/>
+<path d="M67.1429 44.4501L7.02406 79.7198C4.35748 81.2842 1 79.3613 1 76.2697V5.73027C1 2.63869 4.35749 0.715781 7.02406 2.28017L67.1429 37.5499C69.7775 39.0955 69.7775 42.9045 67.1429 44.4501Z" fill="#FFA500" stroke="black" strokeWidth="2"/>
                 </svg>
                 }
+            
+            <svg width="88" height="88" viewBox="0 0 78 88" fill="none" xmlns="http://www.w3.org/2000/svg"
+                className={`${minusStyle}`}
+                onClick={() => {
+                    if(props.start === "start" || props.start === "pause" || props.start === "stop"){
+                        if(props.start !== "start"){
+                            props.setStart("stop");
+                        }
+                    if (props.seconds-10 > 10) {
+                        setTimeout(
+                            () => props.setSeconds(props.seconds - 10),
+                            100,
+                        );
+                    } else {
+                        setTimeout(() => props.setSeconds(10), 100);
+                    }
+                }}}>
+                <rect x="1" y="44" width="7" height="78" rx="3.5" transform="rotate(-90 1 44)" fill="#FFA500" stroke="black" strokeWidth="2"/>
+            </svg>
 
-            <svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg"
+            <svg width="88" height="88" viewBox="0 0 78 88" fill="none" xmlns="http://www.w3.org/2000/svg"
                 className={`${plusStyle}`}
                 onClick={() => {
                     if(props.start !== "reset" && props.start !== "finished" && props.start !== "play"){
@@ -207,30 +232,6 @@ const Controls = props => {
                 <path fillRule="evenodd" clipRule="evenodd" d="M40.4634 2C39.1837 2 38.1463 3.03739 38.1463 4.31707V38.1463H4.31707C3.03739 38.1463 2 39.1837 2 40.4634C2 41.7431 3.03739 42.7805 4.31707 42.7805H38.1463V75.6829C38.1463 76.9626 39.1837 78 40.4634 78C41.7431 78 42.7805 76.9626 42.7805 75.6829V42.7805H75.6829C76.9626 42.7805 78 41.7431 78 40.4634C78 39.1837 76.9626 38.1463 75.6829 38.1463H42.7805V4.31707C42.7805 3.03739 41.7431 2 40.4634 2Z" fill="#FFA500"/>
                 <path d="M38.1463 38.1463V40.1463H40.1463V38.1463H38.1463ZM38.1463 42.7805H40.1463V40.7805H38.1463V42.7805ZM42.7805 42.7805V40.7805H40.7805V42.7805H42.7805ZM42.7805 38.1463H40.7805V40.1463H42.7805V38.1463ZM40.1463 4.31707C40.1463 4.14196 40.2883 4 40.4634 4V0C38.0791 0 36.1463 1.93282 36.1463 4.31707H40.1463ZM40.1463 38.1463V4.31707H36.1463V38.1463H40.1463ZM4.31707 40.1463H38.1463V36.1463H4.31707V40.1463ZM4 40.4634C4 40.2883 4.14196 40.1463 4.31707 40.1463V36.1463C1.93282 36.1463 0 38.0791 0 40.4634H4ZM4.31707 40.7805C4.14196 40.7805 4 40.6385 4 40.4634H0C0 42.8476 1.93282 44.7805 4.31707 44.7805V40.7805ZM38.1463 40.7805H4.31707V44.7805H38.1463V40.7805ZM40.1463 75.6829V42.7805H36.1463V75.6829H40.1463ZM40.4634 76C40.2883 76 40.1463 75.858 40.1463 75.6829H36.1463C36.1463 78.0672 38.0791 80 40.4634 80V76ZM40.7805 75.6829C40.7805 75.858 40.6385 76 40.4634 76V80C42.8476 80 44.7805 78.0672 44.7805 75.6829H40.7805ZM40.7805 42.7805V75.6829H44.7805V42.7805H40.7805ZM75.6829 40.7805H42.7805V44.7805H75.6829V40.7805ZM76 40.4634C76 40.6385 75.858 40.7805 75.6829 40.7805V44.7805C78.0672 44.7805 80 42.8476 80 40.4634H76ZM75.6829 40.1463C75.858 40.1463 76 40.2883 76 40.4634H80C80 38.0791 78.0672 36.1463 75.6829 36.1463V40.1463ZM42.7805 40.1463H75.6829V36.1463H42.7805V40.1463ZM40.7805 4.31707V38.1463H44.7805V4.31707H40.7805ZM40.4634 4C40.6385 4 40.7805 4.14196 40.7805 4.31707H44.7805C44.7805 1.93282 42.8476 0 40.4634 0V4Z" fill="black" mask="url(#path-1-outside-1_7_11)"/>
             </svg>
-
-
-            
-            <svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg"
-                className={`${minusStyle}`}
-                onClick={() => {
-                    if(props.start === "start" || props.start === "pause" || props.start === "stop"){
-                        if(props.start !== "start"){
-                            props.setStart("stop");
-                        }
-                    if (props.seconds-10 > 10) {
-                        setTimeout(
-                            () => props.setSeconds(props.seconds - 10),
-                            100,
-                        );
-                    } else {
-                        setTimeout(() => props.setSeconds(10), 100);
-                    }
-                }}}>
-                <rect x="1" y="44" width="7" height="78" rx="3.5" transform="rotate(-90 1 44)" fill="#FFA500" stroke="black" strokeWidth="2"/>
-            </svg>
-
-            
-
 
             <svg width="85" height="85" viewBox="0 0 85 85" fill="none" xmlns="http://www.w3.org/2000/svg"
                 className={`${buttonsStyle} reset`}
